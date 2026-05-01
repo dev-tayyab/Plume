@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore Plume.sln
+
+      - name: Build
+        run: dotnet build Plume.sln --configuration Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+
+      - name: Test
+        run: dotnet test Plume.sln --configuration Release --no-build
+
+      - name: Pack
+        run: |
+          dotnet pack src/Plume/Plume.csproj                    -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+          dotnet pack src/Plume.OpenAI/Plume.OpenAI.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+          dotnet pack src/Plume.Anthropic/Plume.Anthropic.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+          dotnet pack src/Plume.Google/Plume.Google.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+          dotnet pack src/Plume.Ollama/Plume.Ollama.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+
+      - name: Push to NuGet
+        run: |
+          for pkg in ./artifacts/*.nupkg; do
+            dotnet nuget push "$pkg" \
+              --api-key ${{ secrets.NUGET_API_KEY }} \
+              --source https://api.nuget.org/v3/index.json \
+              --skip-duplicate
+          done
+
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/*.nupkg
+          generate_release_notes: true

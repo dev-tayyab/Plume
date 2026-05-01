@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Plume.OpenAI</PackageId>
+    <Description>OpenAI provider for Plume — works with OpenAI, Azure OpenAI, OpenRouter, and any OpenAI-compatible endpoint.</Description>
+    <RootNamespace>Plume.OpenAI</RootNamespace>
+    <AssemblyName>Plume.OpenAI</AssemblyName>
+    <IsAotCompatible>true</IsAotCompatible>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Plume\Plume.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

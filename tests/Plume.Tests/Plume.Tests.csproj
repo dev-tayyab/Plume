@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <RootNamespace>Plume.Tests</RootNamespace>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591;CS8625</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Plume\Plume.csproj" />
+    <ProjectReference Include="..\..\src\Plume.OpenAI\Plume.OpenAI.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Anthropic\Plume.Anthropic.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Google\Plume.Google.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Ollama\Plume.Ollama.csproj" />
+  </ItemGroup>
+
+</Project>
