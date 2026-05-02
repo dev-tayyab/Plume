@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Plume.Sample.StructuredOutput</RootNamespace>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Plume\Plume.csproj" />
+    <ProjectReference Include="..\..\src\Plume.OpenAI\Plume.OpenAI.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Anthropic\Plume.Anthropic.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Google\Plume.Google.csproj" />
+    <ProjectReference Include="..\..\src\Plume.Ollama\Plume.Ollama.csproj" />
+  </ItemGroup>
+
+</Project>

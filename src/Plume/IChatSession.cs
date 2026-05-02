@@ -1,3 +1,5 @@
+using Plume.Tools;
+
 namespace Plume;
 
 /// <summary>
@@ -20,4 +22,18 @@ public interface IChatSession
 
     /// <summary>Remove all messages except the system prompt.</summary>
     void Reset();
+
+    /// <summary>
+    /// Register tools available to the model. After registration, <see cref="AskAsync"/>
+    /// runs the call loop automatically: when the model emits tool calls, each handler
+    /// is invoked, results are appended to history, and the request is replayed until
+    /// the model stops calling tools or <see cref="MaxToolIterations"/> is reached.
+    /// </summary>
+    IChatSession UseTools(params BoundTool[] tools);
+
+    /// <summary>
+    /// Maximum number of tool-call rounds in a single <see cref="AskAsync"/> invocation.
+    /// Defaults to 10. Set to a smaller value to fail fast on runaway loops.
+    /// </summary>
+    int MaxToolIterations { get; set; }
 }

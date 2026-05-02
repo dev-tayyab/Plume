@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Plume.Abstractions;
 using Plume.Ollama.Internal;
+using Plume.Tools;
 
 namespace Plume.Ollama;
 
@@ -12,6 +13,9 @@ namespace Plume.Ollama;
 /// </summary>
 public sealed class OllamaProvider : IStreamingProvider
 {
+    private static readonly JsonElement JsonModeFormat =
+        JsonDocument.Parse("\"json\"").RootElement.Clone();
+
     private readonly HttpClient _http;
     private readonly OllamaProviderOptions _options;
 
@@ -62,15 +66,36 @@ public sealed class OllamaProvider : IStreamingProvider
         if (raw is null)
             throw new ProviderRequestException(Name, "Empty response from Ollama.");
 
+        var toolCalls = MapToolCallsFromOllama(raw.Message?.ToolCalls);
+
         return new ProviderResponse
         {
             Content = raw.Message?.Content ?? string.Empty,
             Model = raw.Model ?? request.Model,
-            FinishReason = MapFinishReason(raw.DoneReason),
+            FinishReason = toolCalls is { Count: > 0 } ? FinishReason.ToolCalls : MapFinishReason(raw.DoneReason),
+            ToolCalls = toolCalls,
             Usage = (raw.PromptEvalCount, raw.EvalCount) is (int p, int c)
                 ? new TokenUsage(p, c)
                 : null
         };
+    }
+
+    private static List<ToolCall>? MapToolCallsFromOllama(List<OllamaToolCall>? src)
+    {
+        if (src is null || src.Count == 0) return null;
+        var list = new List<ToolCall>(src.Count);
+        for (int i = 0; i < src.Count; i++)
+        {
+            var c = src[i];
+            list.Add(new ToolCall
+            {
+                // Ollama doesn't supply call IDs — synthesize one.
+                Id = $"{c.Function.Name}-{i}",
+                Name = c.Function.Name,
+                ArgumentsJson = c.Function.Arguments.GetRawText()
+            });
+        }
+        return list;
     }
 
     /// <inheritdoc />
@@ -129,18 +154,7 @@ public sealed class OllamaProvider : IStreamingProvider
     {
         var ext = request.Extensions as OllamaExtensions;
 
-        var messages = request.Messages.Select(m => new OllamaMessage
-        {
-            Role = m.Role switch
-            {
-                MessageRole.System => "system",
-                MessageRole.User => "user",
-                MessageRole.Assistant => "assistant",
-                MessageRole.Tool => "tool",
-                _ => "user"
-            },
-            Content = m.Content
-        }).ToList();
+        var messages = request.Messages.Select(MapMessageToOllama).ToList();
 
         var options = new OllamaModelOptions
         {
@@ -160,14 +174,81 @@ public sealed class OllamaProvider : IStreamingProvider
             || options.Seed.HasValue
             || (options.Stop is { Count: > 0 });
 
+        JsonElement? format = null;
+        if (request.ResponseSchema is { } spec)
+        {
+            if (string.IsNullOrEmpty(spec.SchemaJson))
+            {
+                format = JsonModeFormat;
+            }
+            else
+            {
+                using var doc = JsonDocument.Parse(spec.SchemaJson);
+                format = doc.RootElement.Clone();
+            }
+        }
+
         return new OllamaChatRequest
         {
             Model = request.Model,
             Messages = messages,
             Stream = streaming,
             KeepAlive = ext?.KeepAlive,
-            Options = hasOptions ? options : null
+            Options = hasOptions ? options : null,
+            Format = format,
+            Tools = MapOllamaTools(request.Tools)
         };
+    }
+
+    private static OllamaMessage MapMessageToOllama(Message m)
+    {
+        var msg = new OllamaMessage
+        {
+            Role = m.Role switch
+            {
+                MessageRole.System => "system",
+                MessageRole.User => "user",
+                MessageRole.Assistant => "assistant",
+                MessageRole.Tool => "tool",
+                _ => "user"
+            },
+            Content = m.Content
+        };
+
+        if (m.ToolCalls is { Count: > 0 } calls)
+        {
+            msg.ToolCalls = calls.Select(c =>
+            {
+                using var doc = JsonDocument.Parse(string.IsNullOrEmpty(c.ArgumentsJson) ? "{}" : c.ArgumentsJson);
+                return new OllamaToolCall
+                {
+                    Function = new OllamaFunctionInvocation { Name = c.Name, Arguments = doc.RootElement.Clone() }
+                };
+            }).ToList();
+        }
+
+        return msg;
+    }
+
+    private static List<OllamaTool>? MapOllamaTools(IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        var list = new List<OllamaTool>(tools.Count);
+        foreach (var t in tools)
+        {
+            using var doc = JsonDocument.Parse(t.ParametersJsonSchema);
+            list.Add(new OllamaTool
+            {
+                Type = "function",
+                Function = new OllamaFunctionDef
+                {
+                    Name = t.Name,
+                    Description = t.Description,
+                    Parameters = doc.RootElement.Clone()
+                }
+            });
+        }
+        return list;
     }
 
     private static FinishReason MapFinishReason(string? reason) => reason switch

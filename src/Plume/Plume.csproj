@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>Plume</PackageId>
-    <Description>The minimalist, resilient AI client for .NET. One unified API across OpenAI, Anthropic, Google Gemini, and Ollama with built-in failover.</Description>
+    <Description>The minimalist, resilient AI client for .NET. One unified API across OpenAI, Anthropic, Google Gemini, and Ollama with built-in failover. Tiny, AOT-friendly, async-first.</Description>
+    <PackageTags>ai;llm;openai;anthropic;google;gemini;ollama;chatgpt;claude;failover;resilience;streaming;aot</PackageTags>
     <RootNamespace>Plume</RootNamespace>
     <AssemblyName>Plume</AssemblyName>
     <IsAotCompatible>true</IsAotCompatible>

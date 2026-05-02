@@ -1,0 +1,58 @@
+#nullable enable
+Plume.OpenAI.OpenAIExtensions
+Plume.OpenAI.OpenAIExtensions.<Clone>$() -> Plume.OpenAI.OpenAIExtensions!
+Plume.OpenAI.OpenAIExtensions.Equals(Plume.OpenAI.OpenAIExtensions? other) -> bool
+Plume.OpenAI.OpenAIExtensions.FrequencyPenalty.get -> double?
+Plume.OpenAI.OpenAIExtensions.FrequencyPenalty.init -> void
+Plume.OpenAI.OpenAIExtensions.OpenAIExtensions() -> void
+Plume.OpenAI.OpenAIExtensions.PresencePenalty.get -> double?
+Plume.OpenAI.OpenAIExtensions.PresencePenalty.init -> void
+Plume.OpenAI.OpenAIExtensions.ResponseFormat.get -> Plume.OpenAI.OpenAIResponseFormat?
+Plume.OpenAI.OpenAIExtensions.ResponseFormat.init -> void
+Plume.OpenAI.OpenAIExtensions.Seed.get -> int?
+Plume.OpenAI.OpenAIExtensions.Seed.init -> void
+Plume.OpenAI.OpenAIExtensions.TopP.get -> double?
+Plume.OpenAI.OpenAIExtensions.TopP.init -> void
+Plume.OpenAI.OpenAIExtensions.User.get -> string?
+Plume.OpenAI.OpenAIExtensions.User.init -> void
+Plume.OpenAI.OpenAIResponseFormat
+Plume.OpenAI.OpenAIResponseFormat.JsonObject = 1 -> Plume.OpenAI.OpenAIResponseFormat
+Plume.OpenAI.OpenAIResponseFormat.Text = 0 -> Plume.OpenAI.OpenAIResponseFormat
+Plume.OpenAI.OpenAiEmbeddingProvider
+Plume.OpenAI.OpenAiEmbeddingProvider.EmbedAsync(Plume.Abstractions.EmbeddingRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.EmbeddingResponse!>!
+Plume.OpenAI.OpenAiEmbeddingProvider.Name.get -> string!
+Plume.OpenAI.OpenAiEmbeddingProvider.OpenAiEmbeddingProvider(System.Net.Http.HttpClient! http, Plume.OpenAI.OpenAiProviderOptions! options) -> void
+Plume.OpenAI.OpenAiEmbeddingProvider.Supports(string! model) -> bool
+Plume.OpenAI.OpenAiProvider
+Plume.OpenAI.OpenAiProvider.Name.get -> string!
+Plume.OpenAI.OpenAiProvider.OpenAiProvider(System.Net.Http.HttpClient! http, Plume.OpenAI.OpenAiProviderOptions! options) -> void
+Plume.OpenAI.OpenAiProvider.SendAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.ProviderResponse!>!
+Plume.OpenAI.OpenAiProvider.StreamAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Collections.Generic.IAsyncEnumerable<Plume.Abstractions.ProviderStreamChunk!>!
+Plume.OpenAI.OpenAiProvider.Supports(string! model) -> bool
+Plume.OpenAI.OpenAiProviderOptions
+Plume.OpenAI.OpenAiProviderOptions.AcceptAnyModel.get -> bool
+Plume.OpenAI.OpenAiProviderOptions.AcceptAnyModel.init -> void
+Plume.OpenAI.OpenAiProviderOptions.ApiKey.get -> string!
+Plume.OpenAI.OpenAiProviderOptions.ApiKey.init -> void
+Plume.OpenAI.OpenAiProviderOptions.BaseUrl.get -> string!
+Plume.OpenAI.OpenAiProviderOptions.BaseUrl.init -> void
+Plume.OpenAI.OpenAiProviderOptions.OpenAiProviderOptions() -> void
+Plume.OpenAI.OpenAiProviderOptions.Organization.get -> string?
+Plume.OpenAI.OpenAiProviderOptions.Organization.init -> void
+Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions
+Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!)
+Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).FallbackToOpenAi(string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeEmbeddingOptions!
+Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).UseOpenAi(string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeEmbeddingOptions!
+Plume.OpenAI.PlumeOpenAiExtensions
+Plume.OpenAI.PlumeOpenAiExtensions.extension(Plume.PlumeOptions!)
+Plume.OpenAI.PlumeOpenAiExtensions.extension(Plume.PlumeOptions!).FallbackToOpenAI(string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeOptions!
+Plume.OpenAI.PlumeOpenAiExtensions.extension(Plume.PlumeOptions!).UseOpenAi(string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeOptions!
+override Plume.OpenAI.OpenAIExtensions.Equals(object? obj) -> bool
+override Plume.OpenAI.OpenAIExtensions.GetHashCode() -> int
+override Plume.OpenAI.OpenAIExtensions.ToString() -> string!
+static Plume.OpenAI.OpenAIExtensions.operator !=(Plume.OpenAI.OpenAIExtensions? left, Plume.OpenAI.OpenAIExtensions? right) -> bool
+static Plume.OpenAI.OpenAIExtensions.operator ==(Plume.OpenAI.OpenAIExtensions? left, Plume.OpenAI.OpenAIExtensions? right) -> bool
+static Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions.FallbackToOpenAi(this Plume.PlumeEmbeddingOptions! options, string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeEmbeddingOptions!
+static Plume.OpenAI.PlumeOpenAiEmbeddingsExtensions.UseOpenAi(this Plume.PlumeEmbeddingOptions! options, string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeEmbeddingOptions!
+static Plume.OpenAI.PlumeOpenAiExtensions.FallbackToOpenAI(this Plume.PlumeOptions! options, string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeOptions!
+static Plume.OpenAI.PlumeOpenAiExtensions.UseOpenAi(this Plume.PlumeOptions! options, string! apiKey, string? baseUrl = null, string? organization = null, bool acceptAnyModel = false) -> Plume.PlumeOptions!

@@ -63,6 +63,9 @@ internal sealed class DefaultPlumeClient(IProvider provider, PlumeOptions option
             Temperature = request.Temperature ?? _options.DefaultTemperature,
             MaxTokens = request.MaxTokens ?? _options.DefaultMaxTokens,
             StopSequences = request.StopSequences,
+            ResponseSchema = request.ResponseSchema,
+            Tools = request.Tools,
+            ToolChoice = request.ToolChoice,
             Extensions = request.Extensions
         };
 
@@ -74,6 +77,7 @@ internal sealed class DefaultPlumeClient(IProvider provider, PlumeOptions option
             Model = resp.Model,
             Provider = _provider.Name,
             FinishReason = resp.FinishReason,
+            ToolCalls = resp.ToolCalls,
             Usage = resp.Usage,
             Metadata = resp.Metadata
         };
@@ -98,6 +102,9 @@ internal sealed class DefaultPlumeClient(IProvider provider, PlumeOptions option
             Temperature = options?.Temperature ?? _options.DefaultTemperature,
             MaxTokens = options?.MaxTokens ?? _options.DefaultMaxTokens,
             StopSequences = options?.StopSequences,
+            ResponseSchema = options?.ResponseSchema,
+            Tools = options?.Tools,
+            ToolChoice = options?.ToolChoice,
             Extensions = options?.Extensions
         };
     }

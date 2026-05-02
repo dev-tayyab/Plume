@@ -1,10 +1,11 @@
-using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using Plume.Abstractions;
 using Plume.Anthropic.Internal;
+using Plume.Tools;
 
 namespace Plume.Anthropic;
 
@@ -70,18 +71,21 @@ public sealed class AnthropicProvider : IStreamingProvider
         if (raw is null)
             throw new ProviderRequestException(Name, "Empty response from Anthropic.");
 
-        // Concatenate all text content blocks
+        // Concatenate text blocks, harvest tool_use blocks separately
         var contentText = raw.Content is null
             ? string.Empty
             : string.Concat(raw.Content
                 .Where(c => c.Type == "text" && c.Text is not null)
                 .Select(c => c.Text!));
 
+        var toolCalls = MapToolCallsFromAnthropic(raw.Content);
+
         return new ProviderResponse
         {
             Content = contentText,
             Model = raw.Model ?? request.Model,
             FinishReason = MapFinishReason(raw.StopReason),
+            ToolCalls = toolCalls,
             Usage = raw.Usage is { } u
                 ? new TokenUsage(u.InputTokens, u.OutputTokens)
                 : null,
@@ -90,6 +94,24 @@ public sealed class AnthropicProvider : IStreamingProvider
                 ["id"] = raw.Id
             }
         };
+    }
+
+    private static List<ToolCall>? MapToolCallsFromAnthropic(List<AnthropicContentBlock>? blocks)
+    {
+        if (blocks is null) return null;
+        List<ToolCall>? result = null;
+        foreach (var b in blocks)
+        {
+            if (b.Type != "tool_use" || b.Id is null || b.Name is null) continue;
+            result ??= new();
+            result.Add(new ToolCall
+            {
+                Id = b.Id,
+                Name = b.Name,
+                ArgumentsJson = b.Input?.GetRawText() ?? "{}"
+            });
+        }
+        return result;
     }
 
     /// <inheritdoc />
@@ -196,21 +218,16 @@ public sealed class AnthropicProvider : IStreamingProvider
                 continue;
             }
 
-            msgs.Add(new AnthropicMessage
-            {
-                Role = m.Role switch
-                {
-                    MessageRole.User => "user",
-                    MessageRole.Assistant => "assistant",
-                    MessageRole.Tool => "user", // Anthropic doesn't have a "tool" role at this layer
-                    _ => "user"
-                },
-                Content = m.Content
-            });
+            msgs.Add(MapMessageToAnthropic(m));
         }
 
         // max_tokens is REQUIRED by Anthropic. Apply a sensible default if absent.
         var maxTokens = request.MaxTokens ?? 1024;
+
+        // Anthropic has no native JSON mode. Inject schema/JSON instructions into
+        // the system prompt as a best-effort.
+        if (request.ResponseSchema is { } spec)
+            system = AppendStructuredOutputInstruction(system, spec);
 
         return new AnthropicMessagesRequest
         {
@@ -223,12 +240,188 @@ public sealed class AnthropicProvider : IStreamingProvider
             TopP = ext?.TopP,
             StopSequences = request.StopSequences?.ToList(),
             Stream = streaming ? true : null,
-            Metadata = ext?.UserId is null ? null : new AnthropicMetadata { UserId = ext.UserId }
+            Metadata = ext?.UserId is null ? null : new AnthropicMetadata { UserId = ext.UserId },
+            Tools = MapAnthropicTools(request.Tools),
+            ToolChoice = MapAnthropicToolChoice(request.ToolChoice, request.Tools)
         };
+    }
+
+    private static AnthropicMessage MapMessageToAnthropic(Message m)
+    {
+        // Tool result message: emit user-role content array of tool_result blocks.
+        if (m.Role == MessageRole.Tool)
+        {
+            return new AnthropicMessage
+            {
+                Role = "user",
+                Content = BuildToolResultContent(m.ToolCallId ?? string.Empty, m.Content)
+            };
+        }
+
+        var role = m.Role switch
+        {
+            MessageRole.User => "user",
+            MessageRole.Assistant => "assistant",
+            _ => "user"
+        };
+
+        // Assistant turn carrying tool calls: emit content array with text + tool_use blocks.
+        if (m.Role == MessageRole.Assistant && m.ToolCalls is { Count: > 0 } calls)
+        {
+            return new AnthropicMessage
+            {
+                Role = role,
+                Content = BuildAssistantToolCallContent(m.Content, calls)
+            };
+        }
+
+        // Plain message: shorthand string form.
+        return new AnthropicMessage
+        {
+            Role = role,
+            Content = ToStringElement(m.Content)
+        };
+    }
+
+    private static JsonElement ToStringElement(string text)
+    {
+        using var buf = new System.IO.MemoryStream();
+        using (var w = new Utf8JsonWriter(buf)) w.WriteStringValue(text);
+        buf.Position = 0;
+        using var doc = JsonDocument.Parse(buf);
+        return doc.RootElement.Clone();
+    }
+
+    private static JsonElement BuildAssistantToolCallContent(string text, IReadOnlyList<ToolCall> calls)
+    {
+        using var buf = new System.IO.MemoryStream();
+        using (var w = new Utf8JsonWriter(buf))
+        {
+            w.WriteStartArray();
+            if (!string.IsNullOrEmpty(text))
+            {
+                w.WriteStartObject();
+                w.WriteString("type", "text");
+                w.WriteString("text", text);
+                w.WriteEndObject();
+            }
+            foreach (var c in calls)
+            {
+                w.WriteStartObject();
+                w.WriteString("type", "tool_use");
+                w.WriteString("id", c.Id);
+                w.WriteString("name", c.Name);
+                w.WritePropertyName("input");
+                using var input = JsonDocument.Parse(string.IsNullOrEmpty(c.ArgumentsJson) ? "{}" : c.ArgumentsJson);
+                input.RootElement.WriteTo(w);
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+        }
+        buf.Position = 0;
+        using var doc = JsonDocument.Parse(buf);
+        return doc.RootElement.Clone();
+    }
+
+    private static JsonElement BuildToolResultContent(string toolCallId, string result)
+    {
+        using var buf = new System.IO.MemoryStream();
+        using (var w = new Utf8JsonWriter(buf))
+        {
+            w.WriteStartArray();
+            w.WriteStartObject();
+            w.WriteString("type", "tool_result");
+            w.WriteString("tool_use_id", toolCallId);
+            w.WriteString("content", result);
+            w.WriteEndObject();
+            w.WriteEndArray();
+        }
+        buf.Position = 0;
+        using var doc = JsonDocument.Parse(buf);
+        return doc.RootElement.Clone();
+    }
+
+    private static List<AnthropicToolDef>? MapAnthropicTools(IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        var list = new List<AnthropicToolDef>(tools.Count);
+        foreach (var t in tools)
+        {
+            using var doc = JsonDocument.Parse(t.ParametersJsonSchema);
+            list.Add(new AnthropicToolDef
+            {
+                Name = t.Name,
+                Description = t.Description,
+                InputSchema = doc.RootElement.Clone()
+            });
+        }
+        return list;
+    }
+
+    private static JsonElement? MapAnthropicToolChoice(ToolChoice? choice, IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+
+        using var buf = new System.IO.MemoryStream();
+        using (var w = new Utf8JsonWriter(buf))
+        {
+            w.WriteStartObject();
+            switch (choice)
+            {
+                case null or ToolChoice.Auto:
+                    w.WriteString("type", "auto");
+                    break;
+                case ToolChoice.Required:
+                    w.WriteString("type", "any");
+                    break;
+                case ToolChoice.Specific s:
+                    w.WriteString("type", "tool");
+                    w.WriteString("name", s.Name);
+                    break;
+                case ToolChoice.None:
+                    // Anthropic has no explicit "none" — emit auto and rely on the model.
+                    // Better: drop tools entirely upstream when None is requested.
+                    w.WriteString("type", "auto");
+                    break;
+                default:
+                    w.WriteString("type", "auto");
+                    break;
+            }
+            w.WriteEndObject();
+        }
+        buf.Position = 0;
+        using var doc = JsonDocument.Parse(buf);
+        return doc.RootElement.Clone();
+    }
+
+    private static string AppendStructuredOutputInstruction(string? existing, ResponseSchemaSpec spec)
+    {
+        var sb = new StringBuilder();
+        if (!string.IsNullOrEmpty(existing))
+        {
+            sb.Append(existing);
+            sb.Append("\n\n");
+        }
+
+        if (string.IsNullOrEmpty(spec.SchemaJson))
+        {
+            sb.Append("Respond with a single valid JSON value and nothing else. ");
+            sb.Append("Do not wrap your output in code fences or include any commentary.");
+        }
+        else
+        {
+            sb.Append("Respond with a single valid JSON value that conforms to the following JSON Schema, ");
+            sb.Append("and nothing else. Do not wrap your output in code fences or include any commentary.\n\n");
+            sb.Append("Schema:\n");
+            sb.Append(spec.SchemaJson);
+        }
+
+        return sb.ToString();
     }
 
     private static FinishReason MapFinishReason(string? reason) => reason switch
     {
+        "tool_use" => FinishReason.ToolCalls,
         "end_turn" => FinishReason.Stop,
         "stop_sequence" => FinishReason.Stop,
         "max_tokens" => FinishReason.Length,

@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>Plume.Ollama</PackageId>
-    <Description>Ollama provider for Plume — talk to local models via Plume's unified API.</Description>
+    <Description>Ollama provider for Plume — talk to local Llama, Mistral, Qwen, and other models via Plume's unified API. NDJSON streaming.</Description>
+    <PackageTags>plume;ai;llm;ollama;local;llama;mistral;qwen;ndjson;streaming</PackageTags>
     <RootNamespace>Plume.Ollama</RootNamespace>
     <AssemblyName>Plume.Ollama</AssemblyName>
     <IsAotCompatible>true</IsAotCompatible>

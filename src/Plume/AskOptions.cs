@@ -1,3 +1,6 @@
+using Plume.Abstractions;
+using Plume.Tools;
+
 namespace Plume;
 
 /// <summary>
@@ -20,6 +23,19 @@ public sealed record AskOptions
 
     /// <summary>Stop sequences. Generation halts when any of these is produced.</summary>
     public IReadOnlyList<string>? StopSequences { get; init; }
+
+    /// <summary>
+    /// Constrain the response to JSON (with optional schema enforcement).
+    /// Typed callers should prefer the <c>AskAsync&lt;T&gt;</c> extension which
+    /// generates a schema from a <c>JsonTypeInfo&lt;T&gt;</c>.
+    /// </summary>
+    public ResponseSchemaSpec? ResponseSchema { get; init; }
+
+    /// <summary>Tools the model is permitted to call. Null disables tool use.</summary>
+    public IReadOnlyList<Tool>? Tools { get; init; }
+
+    /// <summary>How aggressively the model should use tools.</summary>
+    public ToolChoice? ToolChoice { get; init; }
 
     /// <summary>
     /// Provider-specific extensions (strongly typed per provider).

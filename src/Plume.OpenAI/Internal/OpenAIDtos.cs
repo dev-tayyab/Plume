@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Plume.OpenAI.Internal;
@@ -54,6 +55,15 @@ internal sealed class OpenAiChatRequest
     [JsonPropertyName("response_format")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public OpenAiResponseFormatPayload? ResponseFormat { get; set; }
+
+    [JsonPropertyName("tools")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<OpenAiTool>? Tools { get; set; }
+
+    /// <summary>"auto" | "none" | "required" | { type: "function", function: { name } }</summary>
+    [JsonPropertyName("tool_choice")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public JsonElement? ToolChoice { get; set; }
 }
 
 internal sealed class OpenAiMessage
@@ -62,7 +72,59 @@ internal sealed class OpenAiMessage
     public string Role { get; set; } = "";
 
     [JsonPropertyName("content")]
-    public string Content { get; set; } = "";
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Content { get; set; }
+
+    [JsonPropertyName("tool_calls")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<OpenAiToolCall>? ToolCalls { get; set; }
+
+    [JsonPropertyName("tool_call_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ToolCallId { get; set; }
+}
+
+internal sealed class OpenAiTool
+{
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "function";
+
+    [JsonPropertyName("function")]
+    public OpenAiFunctionDef Function { get; set; } = new();
+}
+
+internal sealed class OpenAiFunctionDef
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "";
+
+    [JsonPropertyName("description")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("parameters")]
+    public JsonElement Parameters { get; set; }
+}
+
+internal sealed class OpenAiToolCall
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = "";
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; } = "function";
+
+    [JsonPropertyName("function")]
+    public OpenAiFunctionCall Function { get; set; } = new();
+}
+
+internal sealed class OpenAiFunctionCall
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "";
+
+    [JsonPropertyName("arguments")]
+    public string Arguments { get; set; } = "";
 }
 
 internal sealed class OpenAiStreamOptions
@@ -75,6 +137,22 @@ internal sealed class OpenAiResponseFormatPayload
 {
     [JsonPropertyName("type")]
     public string Type { get; set; } = "text";
+
+    [JsonPropertyName("json_schema")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public OpenAiJsonSchemaSpec? JsonSchema { get; set; }
+}
+
+internal sealed class OpenAiJsonSchemaSpec
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "response";
+
+    [JsonPropertyName("strict")]
+    public bool Strict { get; set; } = true;
+
+    [JsonPropertyName("schema")]
+    public JsonElement Schema { get; set; }
 }
 
 internal sealed class OpenAiChatResponse

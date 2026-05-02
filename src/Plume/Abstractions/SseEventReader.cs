@@ -33,8 +33,7 @@ public static class SseEventReader
         string? eventName = null;
         var dataBuffer = new System.Text.StringBuilder();
 
-        string? line;
-        while ((line = await reader.ReadLineAsync(ct).ConfigureAwait(false)) is not null)
+        while (await reader.ReadLineAsync(ct).ConfigureAwait(false) is { } line)
         {
             ct.ThrowIfCancellationRequested();
 

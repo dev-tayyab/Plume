@@ -19,28 +19,27 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
-
-      - name: Extract version from tag
-        id: version
-        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          dotnet-version: |
+            8.0.x
+            9.0.x
+            10.0.x
 
       - name: Restore
         run: dotnet restore Plume.sln
 
       - name: Build
-        run: dotnet build Plume.sln --configuration Release --no-restore -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet build Plume.sln --configuration Release --no-restore
 
       - name: Test
         run: dotnet test Plume.sln --configuration Release --no-build
 
       - name: Pack
         run: |
-          dotnet pack src/Plume/Plume.csproj                    -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
-          dotnet pack src/Plume.OpenAI/Plume.OpenAI.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
-          dotnet pack src/Plume.Anthropic/Plume.Anthropic.csproj -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
-          dotnet pack src/Plume.Google/Plume.Google.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
-          dotnet pack src/Plume.Ollama/Plume.Ollama.csproj      -c Release --no-build -p:Version=${{ steps.version.outputs.version }} -o ./artifacts
+          dotnet pack src/Plume/Plume.csproj                     -c Release --no-build -o ./artifacts
+          dotnet pack src/Plume.OpenAI/Plume.OpenAI.csproj       -c Release --no-build -o ./artifacts
+          dotnet pack src/Plume.Anthropic/Plume.Anthropic.csproj -c Release --no-build -o ./artifacts
+          dotnet pack src/Plume.Google/Plume.Google.csproj       -c Release --no-build -o ./artifacts
+          dotnet pack src/Plume.Ollama/Plume.Ollama.csproj       -c Release --no-build -o ./artifacts
 
       - name: Push to NuGet
         run: |
