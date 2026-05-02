@@ -41,9 +41,20 @@ jobs:
           dotnet pack src/Plume.Google/Plume.Google.csproj       -c Release --no-build -o ./artifacts
           dotnet pack src/Plume.Ollama/Plume.Ollama.csproj       -c Release --no-build -o ./artifacts
 
+      - name: List artifacts
+        run: ls -lh ./artifacts
+
       - name: Push to NuGet
         run: |
-          for pkg in ./artifacts/*.nupkg; do
+          shopt -s nullglob
+          nupkgs=(./artifacts/*.nupkg)
+          snupkgs=(./artifacts/*.snupkg)
+          echo "Found ${#nupkgs[@]} .nupkg and ${#snupkgs[@]} .snupkg files."
+          if [ ${#snupkgs[@]} -eq 0 ]; then
+            echo "::warning::No .snupkg files were produced — symbols will not be published."
+          fi
+          for pkg in "${nupkgs[@]}" "${snupkgs[@]}"; do
+            echo "Pushing $pkg"
             dotnet nuget push "$pkg" \
               --api-key ${{ secrets.NUGET_API_KEY }} \
               --source https://api.nuget.org/v3/index.json \

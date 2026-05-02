@@ -6,7 +6,7 @@ One unified API. Multiple providers. Built-in failover.
 [![NuGet](https://img.shields.io/nuget/v/Plume.svg?label=Plume)](https://www.nuget.org/packages/Plume)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Plume.svg)](https://www.nuget.org/packages/Plume)
 [![CI](https://github.com/dev-tayyab/Plume/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-tayyab/Plume/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dev-tayyab/Plume/blob/main/LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0%20%7C%209.0%20%7C%2010.0-512BD4)](https://dotnet.microsoft.com/)
 
 | Package | Version |
@@ -150,6 +150,19 @@ Provider-specific extensions are silently ignored if the request fails over to a
 | Anthropic Claude | `Plume.Anthropic` | `claude-*` | ✅ |
 | Google Gemini | `Plume.Google` | `gemini*` | ✅ |
 | Ollama (local models) | `Plume.Ollama` | any | ✅ |
+
+## Samples
+
+Runnable end-to-end samples live in [`samples/`](https://github.com/dev-tayyab/Plume/tree/main/samples). Each is a single-file program — clone the repo, set the relevant `*_API_KEY` env var, and `dotnet run`.
+
+| Sample | What it shows |
+| --- | --- |
+| [Console](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.Console) | Streaming + multi-turn chat against OpenAI in ~20 lines |
+| [Console.Google](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.Console.Google) | Same flow against Google Gemini — drop-in provider swap |
+| [Failover](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.Failover) | Anthropic → OpenAI → Google → Ollama failover chain |
+| [ToolCalling](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.ToolCalling) | Provider-agnostic function/tool calling |
+| [StructuredOutput](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.StructuredOutput) | Source-generated typed responses (JSON schema, no reflection) |
+| [Embeddings](https://github.com/dev-tayyab/Plume/tree/main/samples/Plume.Sample.Embeddings) | Embedding vectors with the same provider abstraction |
 
 ## Status
 
