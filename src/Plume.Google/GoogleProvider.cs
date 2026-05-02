@@ -1,9 +1,10 @@
-using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Plume.Abstractions;
 using Plume.Google.Internal;
+using Plume.Tools;
 
 namespace Plume.Google;
 
@@ -64,19 +65,41 @@ public sealed class GoogleProvider : IStreamingProvider
             throw new ProviderRequestException(Name, "Empty response from Google.");
 
         var candidate = raw.Candidates[0];
-        var contentText = candidate.Content?.Parts is null
-            ? string.Empty
-            : string.Concat(candidate.Content.Parts.Select(p => p.Text));
+        var (contentText, toolCalls) = ExtractParts(candidate.Content?.Parts);
 
         return new ProviderResponse
         {
             Content = contentText,
             Model = raw.ModelVersion ?? request.Model,
-            FinishReason = MapFinishReason(candidate.FinishReason),
+            FinishReason = toolCalls is { Count: > 0 } ? FinishReason.ToolCalls : MapFinishReason(candidate.FinishReason),
+            ToolCalls = toolCalls,
             Usage = raw.UsageMetadata is { } u
                 ? new TokenUsage(u.PromptTokenCount, u.CandidatesTokenCount)
                 : null
         };
+    }
+
+    private static (string Text, List<ToolCall>? ToolCalls) ExtractParts(List<GooglePart>? parts)
+    {
+        if (parts is null) return (string.Empty, null);
+        var sb = new System.Text.StringBuilder();
+        List<ToolCall>? calls = null;
+        foreach (var p in parts)
+        {
+            if (p.Text is { Length: > 0 } t) sb.Append(t);
+            if (p.FunctionCall is { } fc)
+            {
+                calls ??= new();
+                calls.Add(new ToolCall
+                {
+                    // Gemini doesn't supply IDs — synthesize a stable one from name + index.
+                    Id = $"{fc.Name}-{calls.Count}",
+                    Name = fc.Name,
+                    ArgumentsJson = fc.Args?.GetRawText() ?? "{}"
+                });
+            }
+        }
+        return (sb.ToString(), calls);
     }
 
     /// <inheritdoc />
@@ -151,32 +174,158 @@ public sealed class GoogleProvider : IStreamingProvider
                 continue;
             }
 
-            contents.Add(new GoogleContent
+            contents.Add(MapMessageToGoogle(m));
+        }
+
+        var generationConfig = new GoogleGenerationConfig
+        {
+            Temperature = request.Temperature,
+            MaxOutputTokens = request.MaxTokens,
+            TopP = ext?.TopP,
+            TopK = ext?.TopK,
+            CandidateCount = ext?.CandidateCount,
+            StopSequences = request.StopSequences?.ToList()
+        };
+
+        if (request.ResponseSchema is { } spec)
+        {
+            generationConfig.ResponseMimeType = "application/json";
+
+            if (!string.IsNullOrEmpty(spec.SchemaJson))
             {
-                Role = m.Role switch
-                {
-                    MessageRole.User => "user",
-                    MessageRole.Assistant => "model",
-                    MessageRole.Tool => "user",
-                    _ => "user"
-                },
-                Parts = [new GooglePart { Text = m.Content }]
-            });
+                // Gemini's responseSchema is an OpenAPI-3.0 subset; rewrite the incoming
+                // draft-2020-12 schema (union types, $schema, etc.) into a compatible shape.
+                generationConfig.ResponseSchema = GoogleSchemaSanitizer.Sanitize(spec.SchemaJson);
+            }
         }
 
         return new GoogleGenerateRequest
         {
             Contents = contents,
             SystemInstruction = systemInstruction,
-            GenerationConfig = new GoogleGenerationConfig
+            GenerationConfig = generationConfig,
+            Tools = MapGoogleTools(request.Tools),
+            ToolConfig = MapGoogleToolConfig(request.ToolChoice, request.Tools)
+        };
+    }
+
+    private static GoogleContent MapMessageToGoogle(Message m)
+    {
+        // Tool result message: emit role "function" with a functionResponse part.
+        if (m.Role == MessageRole.Tool)
+        {
+            using var responseDoc = JsonDocument.Parse(BuildResponseObjectJson(m.Content));
+            // ToolCallId on Plume's side carries the id we synthesized; we round-trip
+            // the call's name from the prior assistant turn via the id prefix
+            // ("<name>-<index>"). Strip the index suffix to recover the name.
+            var name = ExtractFunctionName(m.ToolCallId);
+            return new GoogleContent
             {
-                Temperature = request.Temperature,
-                MaxOutputTokens = request.MaxTokens,
-                TopP = ext?.TopP,
-                TopK = ext?.TopK,
-                CandidateCount = ext?.CandidateCount,
-                StopSequences = request.StopSequences?.ToList()
+                Role = "function",
+                Parts = new List<GooglePart>
+                {
+                    new() { FunctionResponse = new GoogleFunctionResponse { Name = name, Response = responseDoc.RootElement.Clone() } }
+                }
+            };
+        }
+
+        var role = m.Role switch
+        {
+            MessageRole.User => "user",
+            MessageRole.Assistant => "model",
+            _ => "user"
+        };
+
+        // Assistant turn carrying tool calls: emit text + functionCall parts.
+        if (m.Role == MessageRole.Assistant && m.ToolCalls is { Count: > 0 } calls)
+        {
+            var parts = new List<GooglePart>();
+            if (!string.IsNullOrEmpty(m.Content))
+                parts.Add(new GooglePart { Text = m.Content });
+            foreach (var c in calls)
+            {
+                JsonElement? args = null;
+                if (!string.IsNullOrEmpty(c.ArgumentsJson))
+                {
+                    using var argsDoc = JsonDocument.Parse(c.ArgumentsJson);
+                    args = argsDoc.RootElement.Clone();
+                }
+                parts.Add(new GooglePart
+                {
+                    FunctionCall = new GoogleFunctionCall { Name = c.Name, Args = args }
+                });
             }
+            return new GoogleContent { Role = role, Parts = parts };
+        }
+
+        return new GoogleContent
+        {
+            Role = role,
+            Parts = new List<GooglePart> { new() { Text = m.Content } }
+        };
+    }
+
+    private static string BuildResponseObjectJson(string content)
+    {
+        // Gemini expects functionResponse.response to be an object. If the content is
+        // already a JSON object, pass it through; otherwise wrap as { "result": <content> }.
+        if (!string.IsNullOrEmpty(content))
+        {
+            try
+            {
+                using var probe = JsonDocument.Parse(content);
+                if (probe.RootElement.ValueKind == JsonValueKind.Object) return content;
+            }
+            catch (JsonException) { /* fall through */ }
+        }
+
+        using var buf = new System.IO.MemoryStream();
+        using (var w = new Utf8JsonWriter(buf))
+        {
+            w.WriteStartObject();
+            w.WriteString("result", content);
+            w.WriteEndObject();
+        }
+        return System.Text.Encoding.UTF8.GetString(buf.ToArray());
+    }
+
+    private static string ExtractFunctionName(string? toolCallId)
+    {
+        if (string.IsNullOrEmpty(toolCallId)) return "function";
+        var dash = toolCallId.LastIndexOf('-');
+        return dash > 0 ? toolCallId[..dash] : toolCallId;
+    }
+
+    private static List<GoogleToolset>? MapGoogleTools(IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        var decls = new List<GoogleFunctionDeclaration>(tools.Count);
+        foreach (var t in tools)
+        {
+            decls.Add(new GoogleFunctionDeclaration
+            {
+                Name = t.Name,
+                Description = t.Description,
+                Parameters = GoogleSchemaSanitizer.Sanitize(t.ParametersJsonSchema)
+            });
+        }
+        return new List<GoogleToolset> { new() { FunctionDeclarations = decls } };
+    }
+
+    private static GoogleToolConfig? MapGoogleToolConfig(ToolChoice? choice, IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        var (mode, allowed) = choice switch
+        {
+            null or ToolChoice.Auto => ("AUTO", null),
+            ToolChoice.None => ("NONE", null),
+            ToolChoice.Required => ("ANY", null),
+            ToolChoice.Specific s => ("ANY", (List<string>?)new List<string> { s.Name }),
+            _ => ("AUTO", null)
+        };
+        return new GoogleToolConfig
+        {
+            FunctionCallingConfig = new GoogleFunctionCallingConfig { Mode = mode, AllowedFunctionNames = allowed }
         };
     }
 

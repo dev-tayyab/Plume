@@ -1,9 +1,11 @@
+using Plume.Tools;
+
 namespace Plume.Abstractions;
 
 /// <summary>The unified response shape returned by any provider.</summary>
 public sealed record ProviderResponse
 {
-    /// <summary>The text content the model produced.</summary>
+    /// <summary>The text content the model produced. May be empty when <see cref="ToolCalls"/> is set.</summary>
     public required string Content { get; init; }
 
     /// <summary>
@@ -14,6 +16,9 @@ public sealed record ProviderResponse
 
     /// <summary>Why the model stopped generating.</summary>
     public required FinishReason FinishReason { get; init; }
+
+    /// <summary>Tool calls the model wants the caller to execute. Null when no tool was called.</summary>
+    public IReadOnlyList<ToolCall>? ToolCalls { get; init; }
 
     /// <summary>Token usage. Null if the provider didn't report it.</summary>
     public TokenUsage? Usage { get; init; }
@@ -52,6 +57,9 @@ public enum FinishReason
 
     /// <summary>An error occurred mid-generation.</summary>
     Error,
+
+    /// <summary>The model stopped to request tool calls.</summary>
+    ToolCalls,
 
     /// <summary>Provider returned a reason Plume doesn't recognize.</summary>
     Other

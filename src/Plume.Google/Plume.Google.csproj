@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>Plume.Google</PackageId>
-    <Description>Google Gemini provider for Plume.</Description>
+    <Description>Google Gemini provider for Plume — full generateContent / streamGenerateContent support.</Description>
+    <PackageTags>plume;ai;llm;google;gemini;generative-ai;streaming</PackageTags>
     <RootNamespace>Plume.Google</RootNamespace>
     <AssemblyName>Plume.Google</AssemblyName>
     <IsAotCompatible>true</IsAotCompatible>

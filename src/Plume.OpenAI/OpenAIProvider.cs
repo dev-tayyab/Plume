@@ -1,9 +1,10 @@
-using System.Net.Http.Json;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Plume.Abstractions;
 using Plume.OpenAI.Internal;
+using Plume.Tools;
 
 namespace Plume.OpenAI;
 
@@ -77,12 +78,14 @@ public sealed class OpenAiProvider : IStreamingProvider
 
         var choice = raw.Choices[0];
         var content = choice.Message?.Content ?? string.Empty;
+        var toolCalls = MapToolCallsFromOpenAi(choice.Message?.ToolCalls);
 
         return new ProviderResponse
         {
             Content = content,
             Model = raw.Model ?? request.Model,
             FinishReason = MapFinishReason(choice.FinishReason),
+            ToolCalls = toolCalls,
             Usage = raw.Usage is { } u
                 ? new TokenUsage(u.PromptTokens, u.CompletionTokens)
                 : null,
@@ -92,6 +95,22 @@ public sealed class OpenAiProvider : IStreamingProvider
                 ["system_fingerprint"] = raw.SystemFingerprint
             }
         };
+    }
+
+    private static List<ToolCall>? MapToolCallsFromOpenAi(List<OpenAiToolCall>? src)
+    {
+        if (src is null || src.Count == 0) return null;
+        var list = new List<ToolCall>(src.Count);
+        foreach (var c in src)
+        {
+            list.Add(new ToolCall
+            {
+                Id = c.Id,
+                Name = c.Function.Name,
+                ArgumentsJson = c.Function.Arguments
+            });
+        }
+        return list;
     }
 
     /// <inheritdoc />
@@ -157,18 +176,7 @@ public sealed class OpenAiProvider : IStreamingProvider
     {
         var ext = request.Extensions as OpenAIExtensions;
 
-        var messages = request.Messages.Select(m => new OpenAiMessage
-        {
-            Role = m.Role switch
-            {
-                MessageRole.System => "system",
-                MessageRole.User => "user",
-                MessageRole.Assistant => "assistant",
-                MessageRole.Tool => "tool",
-                _ => "user"
-            },
-            Content = m.Content
-        }).ToList();
+        var messages = request.Messages.Select(MapMessageToOpenAi).ToList();
 
         return new OpenAiChatRequest
         {
@@ -184,11 +192,129 @@ public sealed class OpenAiProvider : IStreamingProvider
             Seed = ext?.Seed,
             User = ext?.User,
             TopP = ext?.TopP,
-            ResponseFormat = ext?.ResponseFormat switch
+            ResponseFormat = MapResponseFormat(request, ext),
+            Tools = MapTools(request.Tools),
+            ToolChoice = MapToolChoice(request.ToolChoice, request.Tools)
+        };
+    }
+
+    private static OpenAiMessage MapMessageToOpenAi(Message m)
+    {
+        var msg = new OpenAiMessage
+        {
+            Role = m.Role switch
             {
-                OpenAIResponseFormat.JsonObject => new OpenAiResponseFormatPayload { Type = "json_object" },
-                _ => null
+                MessageRole.System => "system",
+                MessageRole.User => "user",
+                MessageRole.Assistant => "assistant",
+                MessageRole.Tool => "tool",
+                _ => "user"
+            },
+            Content = string.IsNullOrEmpty(m.Content) ? null : m.Content,
+            ToolCallId = m.ToolCallId
+        };
+
+        if (m.ToolCalls is { Count: > 0 } calls)
+        {
+            msg.ToolCalls = calls.Select(c => new OpenAiToolCall
+            {
+                Id = c.Id,
+                Type = "function",
+                Function = new OpenAiFunctionCall { Name = c.Name, Arguments = c.ArgumentsJson }
+            }).ToList();
+        }
+
+        return msg;
+    }
+
+    private static List<OpenAiTool>? MapTools(IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        var list = new List<OpenAiTool>(tools.Count);
+        foreach (var t in tools)
+        {
+            using var doc = JsonDocument.Parse(t.ParametersJsonSchema);
+            list.Add(new OpenAiTool
+            {
+                Type = "function",
+                Function = new OpenAiFunctionDef
+                {
+                    Name = t.Name,
+                    Description = t.Description,
+                    Parameters = doc.RootElement.Clone()
+                }
+            });
+        }
+        return list;
+    }
+
+    private static JsonElement? MapToolChoice(ToolChoice? choice, IReadOnlyList<Tool>? tools)
+    {
+        if (tools is null || tools.Count == 0) return null;
+        return choice switch
+        {
+            null or ToolChoice.Auto => StringElement("auto"),
+            ToolChoice.None => StringElement("none"),
+            ToolChoice.Required => StringElement("required"),
+            ToolChoice.Specific s => SpecificToolChoiceElement(s.Name),
+            _ => StringElement("auto")
+        };
+
+        static JsonElement StringElement(string value)
+        {
+            // JsonDocument.Parse handles quoting and escaping safely without
+            // requiring runtime reflection-based serialization.
+            using var buf = new System.IO.MemoryStream();
+            using (var writer = new Utf8JsonWriter(buf)) writer.WriteStringValue(value);
+            buf.Position = 0;
+            using var doc = JsonDocument.Parse(buf);
+            return doc.RootElement.Clone();
+        }
+
+        static JsonElement SpecificToolChoiceElement(string toolName)
+        {
+            using var buf = new System.IO.MemoryStream();
+            using (var writer = new Utf8JsonWriter(buf))
+            {
+                writer.WriteStartObject();
+                writer.WriteString("type", "function");
+                writer.WriteStartObject("function");
+                writer.WriteString("name", toolName);
+                writer.WriteEndObject();
+                writer.WriteEndObject();
             }
+            buf.Position = 0;
+            using var doc = JsonDocument.Parse(buf);
+            return doc.RootElement.Clone();
+        }
+    }
+
+    private static OpenAiResponseFormatPayload? MapResponseFormat(
+        ProviderRequest request, OpenAIExtensions? ext)
+    {
+        // Provider-agnostic structured output takes precedence.
+        if (request.ResponseSchema is { } spec)
+        {
+            if (string.IsNullOrEmpty(spec.SchemaJson))
+                return new OpenAiResponseFormatPayload { Type = "json_object" };
+
+            using var doc = JsonDocument.Parse(spec.SchemaJson);
+            return new OpenAiResponseFormatPayload
+            {
+                Type = "json_schema",
+                JsonSchema = new OpenAiJsonSchemaSpec
+                {
+                    Name = spec.Name ?? "response",
+                    Strict = spec.Strict,
+                    Schema = doc.RootElement.Clone()
+                }
+            };
+        }
+
+        return ext?.ResponseFormat switch
+        {
+            OpenAIResponseFormat.JsonObject => new OpenAiResponseFormatPayload { Type = "json_object" },
+            _ => null
         };
     }
 
@@ -197,6 +323,7 @@ public sealed class OpenAiProvider : IStreamingProvider
         "stop" => FinishReason.Stop,
         "length" => FinishReason.Length,
         "content_filter" => FinishReason.ContentFilter,
+        "tool_calls" => FinishReason.ToolCalls,
         null => FinishReason.Stop,
         _ => FinishReason.Other
     };

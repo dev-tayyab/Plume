@@ -1,0 +1,477 @@
+#nullable enable
+Plume.Abstractions.EmbeddingRequest
+Plume.Abstractions.EmbeddingRequest.<Clone>$() -> Plume.Abstractions.EmbeddingRequest!
+Plume.Abstractions.EmbeddingRequest.Dimensions.get -> int?
+Plume.Abstractions.EmbeddingRequest.Dimensions.init -> void
+Plume.Abstractions.EmbeddingRequest.EmbeddingRequest() -> void
+Plume.Abstractions.EmbeddingRequest.Equals(Plume.Abstractions.EmbeddingRequest? other) -> bool
+Plume.Abstractions.EmbeddingRequest.Extensions.get -> Plume.IProviderExtensions?
+Plume.Abstractions.EmbeddingRequest.Extensions.init -> void
+Plume.Abstractions.EmbeddingRequest.Inputs.get -> System.Collections.Generic.IReadOnlyList<string!>!
+Plume.Abstractions.EmbeddingRequest.Inputs.init -> void
+Plume.Abstractions.EmbeddingRequest.Model.get -> string!
+Plume.Abstractions.EmbeddingRequest.Model.init -> void
+Plume.Abstractions.EmbeddingResponse
+Plume.Abstractions.EmbeddingResponse.<Clone>$() -> Plume.Abstractions.EmbeddingResponse!
+Plume.Abstractions.EmbeddingResponse.EmbeddingResponse() -> void
+Plume.Abstractions.EmbeddingResponse.Embeddings.get -> System.Collections.Generic.IReadOnlyList<Plume.Embedding!>!
+Plume.Abstractions.EmbeddingResponse.Embeddings.init -> void
+Plume.Abstractions.EmbeddingResponse.Equals(Plume.Abstractions.EmbeddingResponse? other) -> bool
+Plume.Abstractions.EmbeddingResponse.Metadata.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>?
+Plume.Abstractions.EmbeddingResponse.Metadata.init -> void
+Plume.Abstractions.EmbeddingResponse.Model.get -> string!
+Plume.Abstractions.EmbeddingResponse.Model.init -> void
+Plume.Abstractions.EmbeddingResponse.Usage.get -> Plume.Abstractions.TokenUsage?
+Plume.Abstractions.EmbeddingResponse.Usage.init -> void
+Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.ContentFilter = 2 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.Error = 3 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.Length = 1 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.Other = 5 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.Stop = 0 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.FinishReason.ToolCalls = 4 -> Plume.Abstractions.FinishReason
+Plume.Abstractions.HttpProviderHelpers
+Plume.Abstractions.IEmbeddingProvider
+Plume.Abstractions.IEmbeddingProvider.EmbedAsync(Plume.Abstractions.EmbeddingRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.EmbeddingResponse!>!
+Plume.Abstractions.IEmbeddingProvider.Name.get -> string!
+Plume.Abstractions.IEmbeddingProvider.Supports(string! model) -> bool
+Plume.Abstractions.IProvider
+Plume.Abstractions.IProvider.Name.get -> string!
+Plume.Abstractions.IProvider.SendAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.ProviderResponse!>!
+Plume.Abstractions.IProvider.Supports(string! model) -> bool
+Plume.Abstractions.IStreamingProvider
+Plume.Abstractions.IStreamingProvider.StreamAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Collections.Generic.IAsyncEnumerable<Plume.Abstractions.ProviderStreamChunk!>!
+Plume.Abstractions.ProviderRequest
+Plume.Abstractions.ProviderRequest.<Clone>$() -> Plume.Abstractions.ProviderRequest!
+Plume.Abstractions.ProviderRequest.Equals(Plume.Abstractions.ProviderRequest? other) -> bool
+Plume.Abstractions.ProviderRequest.Extensions.get -> Plume.IProviderExtensions?
+Plume.Abstractions.ProviderRequest.Extensions.init -> void
+Plume.Abstractions.ProviderRequest.MaxTokens.get -> int?
+Plume.Abstractions.ProviderRequest.MaxTokens.init -> void
+Plume.Abstractions.ProviderRequest.Messages.get -> System.Collections.Generic.IReadOnlyList<Plume.Message!>!
+Plume.Abstractions.ProviderRequest.Messages.init -> void
+Plume.Abstractions.ProviderRequest.Model.get -> string!
+Plume.Abstractions.ProviderRequest.Model.init -> void
+Plume.Abstractions.ProviderRequest.ProviderRequest() -> void
+Plume.Abstractions.ProviderRequest.ResponseSchema.get -> Plume.Abstractions.ResponseSchemaSpec?
+Plume.Abstractions.ProviderRequest.ResponseSchema.init -> void
+Plume.Abstractions.ProviderRequest.StopSequences.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Plume.Abstractions.ProviderRequest.StopSequences.init -> void
+Plume.Abstractions.ProviderRequest.Temperature.get -> double?
+Plume.Abstractions.ProviderRequest.Temperature.init -> void
+Plume.Abstractions.ProviderRequest.ToolChoice.get -> Plume.Tools.ToolChoice?
+Plume.Abstractions.ProviderRequest.ToolChoice.init -> void
+Plume.Abstractions.ProviderRequest.Tools.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.Tool!>?
+Plume.Abstractions.ProviderRequest.Tools.init -> void
+Plume.Abstractions.ProviderResponse
+Plume.Abstractions.ProviderResponse.<Clone>$() -> Plume.Abstractions.ProviderResponse!
+Plume.Abstractions.ProviderResponse.Content.get -> string!
+Plume.Abstractions.ProviderResponse.Content.init -> void
+Plume.Abstractions.ProviderResponse.Equals(Plume.Abstractions.ProviderResponse? other) -> bool
+Plume.Abstractions.ProviderResponse.FinishReason.get -> Plume.Abstractions.FinishReason
+Plume.Abstractions.ProviderResponse.FinishReason.init -> void
+Plume.Abstractions.ProviderResponse.Metadata.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>?
+Plume.Abstractions.ProviderResponse.Metadata.init -> void
+Plume.Abstractions.ProviderResponse.Model.get -> string!
+Plume.Abstractions.ProviderResponse.Model.init -> void
+Plume.Abstractions.ProviderResponse.ProviderResponse() -> void
+Plume.Abstractions.ProviderResponse.ToolCalls.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.ToolCall!>?
+Plume.Abstractions.ProviderResponse.ToolCalls.init -> void
+Plume.Abstractions.ProviderResponse.Usage.get -> Plume.Abstractions.TokenUsage?
+Plume.Abstractions.ProviderResponse.Usage.init -> void
+Plume.Abstractions.ProviderStreamChunk
+Plume.Abstractions.ProviderStreamChunk.<Clone>$() -> Plume.Abstractions.ProviderStreamChunk!
+Plume.Abstractions.ProviderStreamChunk.Content.get -> string!
+Plume.Abstractions.ProviderStreamChunk.Content.init -> void
+Plume.Abstractions.ProviderStreamChunk.Equals(Plume.Abstractions.ProviderStreamChunk? other) -> bool
+Plume.Abstractions.ProviderStreamChunk.FinishReason.get -> Plume.Abstractions.FinishReason?
+Plume.Abstractions.ProviderStreamChunk.FinishReason.init -> void
+Plume.Abstractions.ProviderStreamChunk.IsFinal.get -> bool
+Plume.Abstractions.ProviderStreamChunk.IsFinal.init -> void
+Plume.Abstractions.ProviderStreamChunk.ProviderStreamChunk() -> void
+Plume.Abstractions.ProviderStreamChunk.Usage.get -> Plume.Abstractions.TokenUsage?
+Plume.Abstractions.ProviderStreamChunk.Usage.init -> void
+Plume.Abstractions.ResponseSchemaSpec
+Plume.Abstractions.ResponseSchemaSpec.<Clone>$() -> Plume.Abstractions.ResponseSchemaSpec!
+Plume.Abstractions.ResponseSchemaSpec.Equals(Plume.Abstractions.ResponseSchemaSpec? other) -> bool
+Plume.Abstractions.ResponseSchemaSpec.Name.get -> string?
+Plume.Abstractions.ResponseSchemaSpec.Name.init -> void
+Plume.Abstractions.ResponseSchemaSpec.ResponseSchemaSpec() -> void
+Plume.Abstractions.ResponseSchemaSpec.SchemaJson.get -> string?
+Plume.Abstractions.ResponseSchemaSpec.SchemaJson.init -> void
+Plume.Abstractions.ResponseSchemaSpec.Strict.get -> bool
+Plume.Abstractions.ResponseSchemaSpec.Strict.init -> void
+Plume.Abstractions.SseEvent
+Plume.Abstractions.SseEvent.Data.get -> string!
+Plume.Abstractions.SseEvent.Data.init -> void
+Plume.Abstractions.SseEvent.Deconstruct(out string? EventName, out string! Data) -> void
+Plume.Abstractions.SseEvent.Equals(Plume.Abstractions.SseEvent other) -> bool
+Plume.Abstractions.SseEvent.EventName.get -> string?
+Plume.Abstractions.SseEvent.EventName.init -> void
+Plume.Abstractions.SseEvent.SseEvent() -> void
+Plume.Abstractions.SseEvent.SseEvent(string? EventName, string! Data) -> void
+Plume.Abstractions.SseEventReader
+Plume.Abstractions.TokenUsage
+Plume.Abstractions.TokenUsage.<Clone>$() -> Plume.Abstractions.TokenUsage!
+Plume.Abstractions.TokenUsage.CompletionTokens.get -> int
+Plume.Abstractions.TokenUsage.CompletionTokens.init -> void
+Plume.Abstractions.TokenUsage.Deconstruct(out int PromptTokens, out int CompletionTokens) -> void
+Plume.Abstractions.TokenUsage.Equals(Plume.Abstractions.TokenUsage? other) -> bool
+Plume.Abstractions.TokenUsage.PromptTokens.get -> int
+Plume.Abstractions.TokenUsage.PromptTokens.init -> void
+Plume.Abstractions.TokenUsage.TokenUsage(int PromptTokens, int CompletionTokens) -> void
+Plume.Abstractions.TokenUsage.TotalTokens.get -> int
+Plume.AllProvidersFailedException
+Plume.AllProvidersFailedException.AllProvidersFailedException(System.Collections.Generic.IReadOnlyList<System.Exception!>! errors) -> void
+Plume.AllProvidersFailedException.ProviderErrors.get -> System.Collections.Generic.IReadOnlyList<System.Exception!>!
+Plume.AskOptions
+Plume.AskOptions.<Clone>$() -> Plume.AskOptions!
+Plume.AskOptions.AskOptions() -> void
+Plume.AskOptions.Equals(Plume.AskOptions? other) -> bool
+Plume.AskOptions.Extensions.get -> Plume.IProviderExtensions?
+Plume.AskOptions.Extensions.init -> void
+Plume.AskOptions.MaxTokens.get -> int?
+Plume.AskOptions.MaxTokens.init -> void
+Plume.AskOptions.Model.get -> string?
+Plume.AskOptions.Model.init -> void
+Plume.AskOptions.ResponseSchema.get -> Plume.Abstractions.ResponseSchemaSpec?
+Plume.AskOptions.ResponseSchema.init -> void
+Plume.AskOptions.StopSequences.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Plume.AskOptions.StopSequences.init -> void
+Plume.AskOptions.System.get -> string?
+Plume.AskOptions.System.init -> void
+Plume.AskOptions.Temperature.get -> double?
+Plume.AskOptions.Temperature.init -> void
+Plume.AskOptions.ToolChoice.get -> Plume.Tools.ToolChoice?
+Plume.AskOptions.ToolChoice.init -> void
+Plume.AskOptions.Tools.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.Tool!>?
+Plume.AskOptions.Tools.init -> void
+Plume.DependencyInjection.EmbeddingsServiceCollectionExtensions
+Plume.DependencyInjection.ServiceCollectionExtensions
+Plume.EmbedOptions
+Plume.EmbedOptions.<Clone>$() -> Plume.EmbedOptions!
+Plume.EmbedOptions.Dimensions.get -> int?
+Plume.EmbedOptions.Dimensions.init -> void
+Plume.EmbedOptions.EmbedOptions() -> void
+Plume.EmbedOptions.Equals(Plume.EmbedOptions? other) -> bool
+Plume.EmbedOptions.Extensions.get -> Plume.IProviderExtensions?
+Plume.EmbedOptions.Extensions.init -> void
+Plume.EmbedOptions.Model.get -> string?
+Plume.EmbedOptions.Model.init -> void
+Plume.Embedding
+Plume.Embedding.<Clone>$() -> Plume.Embedding!
+Plume.Embedding.CosineSimilarity(Plume.Embedding! other) -> float
+Plume.Embedding.Dimensions.get -> int
+Plume.Embedding.Embedding(System.ReadOnlyMemory<float> vector) -> void
+Plume.Embedding.Equals(Plume.Embedding? other) -> bool
+Plume.Embedding.Vector.get -> System.ReadOnlyMemory<float>
+Plume.EmbeddingClient
+Plume.EmbeddingClientBuilder
+Plume.EmbeddingClientBuilder.AddFallback(Plume.Abstractions.IEmbeddingProvider! provider) -> Plume.EmbeddingClientBuilder!
+Plume.EmbeddingClientBuilder.Build() -> Plume.IEmbeddingClient!
+Plume.EmbeddingClientBuilder.EmbeddingClientBuilder() -> void
+Plume.EmbeddingClientBuilder.Use(Plume.Abstractions.IEmbeddingProvider! provider) -> Plume.EmbeddingClientBuilder!
+Plume.EmbeddingClientBuilder.WithDefaultDimensions(int dimensions) -> Plume.EmbeddingClientBuilder!
+Plume.EmbeddingClientBuilder.WithDefaultModel(string! model) -> Plume.EmbeddingClientBuilder!
+Plume.EmbeddingClientExtensions
+Plume.IChatSession
+Plume.IChatSession.AddMessage(Plume.Message! message) -> void
+Plume.IChatSession.AskAsync(string! userMessage, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+Plume.IChatSession.History.get -> System.Collections.Generic.IReadOnlyList<Plume.Message!>!
+Plume.IChatSession.MaxToolIterations.get -> int
+Plume.IChatSession.MaxToolIterations.set -> void
+Plume.IChatSession.Reset() -> void
+Plume.IChatSession.StreamAsync(string! userMessage, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<string!>!
+Plume.IChatSession.UseTools(params Plume.Tools.BoundTool![]! tools) -> Plume.IChatSession!
+Plume.IEmbeddingClient
+Plume.IEmbeddingClient.EmbedAsync(System.Collections.Generic.IReadOnlyList<string!>! inputs, Plume.EmbedOptions? options = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<Plume.Embedding!>!>!
+Plume.IEmbeddingClient.SendAsync(Plume.Abstractions.EmbeddingRequest! request, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Plume.Abstractions.EmbeddingResponse!>!
+Plume.IPlumeClient
+Plume.IPlumeClient.AskAsync(string! prompt, Plume.AskOptions? options = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<string!>!
+Plume.IPlumeClient.NewChat(string? system = null, Plume.AskOptions? options = null) -> Plume.IChatSession!
+Plume.IPlumeClient.SendAsync(Plume.PlumeRequest! request, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Plume.PlumeResponse!>!
+Plume.IPlumeClient.StreamAsync(string! prompt, Plume.AskOptions? options = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<string!>!
+Plume.IProviderExtensions
+Plume.Message
+Plume.Message.<Clone>$() -> Plume.Message!
+Plume.Message.Content.get -> string!
+Plume.Message.Content.init -> void
+Plume.Message.Deconstruct(out Plume.MessageRole Role, out string! Content) -> void
+Plume.Message.Equals(Plume.Message? other) -> bool
+Plume.Message.Message(Plume.MessageRole Role, string! Content) -> void
+Plume.Message.Role.get -> Plume.MessageRole
+Plume.Message.Role.init -> void
+Plume.Message.Timestamp.get -> System.DateTimeOffset
+Plume.Message.Timestamp.init -> void
+Plume.Message.ToolCallId.get -> string?
+Plume.Message.ToolCallId.init -> void
+Plume.Message.ToolCalls.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.ToolCall!>?
+Plume.Message.ToolCalls.init -> void
+Plume.MessageRole
+Plume.MessageRole.Assistant = 2 -> Plume.MessageRole
+Plume.MessageRole.System = 0 -> Plume.MessageRole
+Plume.MessageRole.Tool = 3 -> Plume.MessageRole
+Plume.MessageRole.User = 1 -> Plume.MessageRole
+Plume.PlumeClient
+Plume.PlumeClientBuilder
+Plume.PlumeClientBuilder.AddFallback(Plume.Abstractions.IProvider! provider) -> Plume.PlumeClientBuilder!
+Plume.PlumeClientBuilder.Build() -> Plume.IPlumeClient!
+Plume.PlumeClientBuilder.PlumeClientBuilder() -> void
+Plume.PlumeClientBuilder.Use(Plume.Abstractions.IProvider! provider) -> Plume.PlumeClientBuilder!
+Plume.PlumeClientBuilder.WithDefaultMaxTokens(int maxTokens) -> Plume.PlumeClientBuilder!
+Plume.PlumeClientBuilder.WithDefaultModel(string! model) -> Plume.PlumeClientBuilder!
+Plume.PlumeClientBuilder.WithDefaultSystem(string! system) -> Plume.PlumeClientBuilder!
+Plume.PlumeClientBuilder.WithDefaultTemperature(double temperature) -> Plume.PlumeClientBuilder!
+Plume.PlumeEmbeddingOptions
+Plume.PlumeEmbeddingOptions.AddFallback(System.Func<System.IServiceProvider!, Plume.Abstractions.IEmbeddingProvider!>! factory) -> Plume.PlumeEmbeddingOptions!
+Plume.PlumeEmbeddingOptions.DefaultDimensions.get -> int?
+Plume.PlumeEmbeddingOptions.DefaultDimensions.set -> void
+Plume.PlumeEmbeddingOptions.DefaultModel.get -> string?
+Plume.PlumeEmbeddingOptions.DefaultModel.set -> void
+Plume.PlumeEmbeddingOptions.PlumeEmbeddingOptions() -> void
+Plume.PlumeEmbeddingOptions.Use(System.Func<System.IServiceProvider!, Plume.Abstractions.IEmbeddingProvider!>! factory) -> Plume.PlumeEmbeddingOptions!
+Plume.PlumeException
+Plume.PlumeException.PlumeException(string! message) -> void
+Plume.PlumeException.PlumeException(string! message, System.Exception! inner) -> void
+Plume.PlumeOptions
+Plume.PlumeOptions.AddFallback(System.Func<System.IServiceProvider!, Plume.Abstractions.IProvider!>! factory) -> Plume.PlumeOptions!
+Plume.PlumeOptions.DefaultMaxTokens.get -> int?
+Plume.PlumeOptions.DefaultMaxTokens.set -> void
+Plume.PlumeOptions.DefaultModel.get -> string?
+Plume.PlumeOptions.DefaultModel.set -> void
+Plume.PlumeOptions.DefaultSystemPrompt.get -> string?
+Plume.PlumeOptions.DefaultSystemPrompt.set -> void
+Plume.PlumeOptions.DefaultTemperature.get -> double?
+Plume.PlumeOptions.DefaultTemperature.set -> void
+Plume.PlumeOptions.PlumeOptions() -> void
+Plume.PlumeOptions.Use(System.Func<System.IServiceProvider!, Plume.Abstractions.IProvider!>! factory) -> Plume.PlumeOptions!
+Plume.PlumeRequest
+Plume.PlumeRequest.<Clone>$() -> Plume.PlumeRequest!
+Plume.PlumeRequest.Equals(Plume.PlumeRequest? other) -> bool
+Plume.PlumeRequest.Extensions.get -> Plume.IProviderExtensions?
+Plume.PlumeRequest.Extensions.init -> void
+Plume.PlumeRequest.MaxTokens.get -> int?
+Plume.PlumeRequest.MaxTokens.init -> void
+Plume.PlumeRequest.Messages.get -> System.Collections.Generic.IReadOnlyList<Plume.Message!>!
+Plume.PlumeRequest.Messages.init -> void
+Plume.PlumeRequest.Model.get -> string?
+Plume.PlumeRequest.Model.init -> void
+Plume.PlumeRequest.PlumeRequest() -> void
+Plume.PlumeRequest.ResponseSchema.get -> Plume.Abstractions.ResponseSchemaSpec?
+Plume.PlumeRequest.ResponseSchema.init -> void
+Plume.PlumeRequest.StopSequences.get -> System.Collections.Generic.IReadOnlyList<string!>?
+Plume.PlumeRequest.StopSequences.init -> void
+Plume.PlumeRequest.Temperature.get -> double?
+Plume.PlumeRequest.Temperature.init -> void
+Plume.PlumeRequest.ToolChoice.get -> Plume.Tools.ToolChoice?
+Plume.PlumeRequest.ToolChoice.init -> void
+Plume.PlumeRequest.Tools.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.Tool!>?
+Plume.PlumeRequest.Tools.init -> void
+Plume.PlumeResponse
+Plume.PlumeResponse.<Clone>$() -> Plume.PlumeResponse!
+Plume.PlumeResponse.Content.get -> string!
+Plume.PlumeResponse.Content.init -> void
+Plume.PlumeResponse.Equals(Plume.PlumeResponse? other) -> bool
+Plume.PlumeResponse.FinishReason.get -> Plume.Abstractions.FinishReason
+Plume.PlumeResponse.FinishReason.init -> void
+Plume.PlumeResponse.Metadata.get -> System.Collections.Generic.IReadOnlyDictionary<string!, object?>?
+Plume.PlumeResponse.Metadata.init -> void
+Plume.PlumeResponse.Model.get -> string!
+Plume.PlumeResponse.Model.init -> void
+Plume.PlumeResponse.PlumeResponse() -> void
+Plume.PlumeResponse.Provider.get -> string!
+Plume.PlumeResponse.Provider.init -> void
+Plume.PlumeResponse.ToolCalls.get -> System.Collections.Generic.IReadOnlyList<Plume.Tools.ToolCall!>?
+Plume.PlumeResponse.ToolCalls.init -> void
+Plume.PlumeResponse.Usage.get -> Plume.Abstractions.TokenUsage?
+Plume.PlumeResponse.Usage.init -> void
+Plume.ProviderRateLimitException
+Plume.ProviderRateLimitException.ProviderRateLimitException(string! provider, System.TimeSpan? retryAfter = null) -> void
+Plume.ProviderRateLimitException.RetryAfter.get -> System.TimeSpan?
+Plume.ProviderRequestException
+Plume.ProviderRequestException.ProviderName.get -> string!
+Plume.ProviderRequestException.ProviderRequestException(string! provider, string! message, int? statusCode = null) -> void
+Plume.ProviderRequestException.StatusCode.get -> int?
+Plume.ProviderTransientException
+Plume.ProviderTransientException.ProviderName.get -> string!
+Plume.ProviderTransientException.ProviderTransientException(string! provider, string! message) -> void
+Plume.ProviderTransientException.ProviderTransientException(string! provider, string! message, System.Exception! inner) -> void
+Plume.StructuredOutput.JsonSchemaGenerator
+Plume.StructuredOutput.PlumeClientStructuredExtensions
+Plume.StructuredOutput.PlumeStructuredOutputException
+Plume.StructuredOutput.PlumeStructuredOutputException.PlumeStructuredOutputException(string! message) -> void
+Plume.StructuredOutput.PlumeStructuredOutputException.PlumeStructuredOutputException(string! message, System.Exception! inner) -> void
+Plume.Tools.BoundTool
+Plume.Tools.BoundTool.BoundTool(Plume.Tools.Tool! tool, System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! handler) -> void
+Plume.Tools.BoundTool.Handler.get -> System.Func<string!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>!
+Plume.Tools.BoundTool.Tool.get -> Plume.Tools.Tool!
+Plume.Tools.Tool
+Plume.Tools.Tool.<Clone>$() -> Plume.Tools.Tool!
+Plume.Tools.Tool.Description.get -> string?
+Plume.Tools.Tool.Description.init -> void
+Plume.Tools.Tool.Equals(Plume.Tools.Tool? other) -> bool
+Plume.Tools.Tool.Name.get -> string!
+Plume.Tools.Tool.Name.init -> void
+Plume.Tools.Tool.ParametersJsonSchema.get -> string!
+Plume.Tools.Tool.ParametersJsonSchema.init -> void
+Plume.Tools.Tool.Tool() -> void
+Plume.Tools.ToolBinder
+Plume.Tools.ToolCall
+Plume.Tools.ToolCall.<Clone>$() -> Plume.Tools.ToolCall!
+Plume.Tools.ToolCall.ArgumentsJson.get -> string!
+Plume.Tools.ToolCall.ArgumentsJson.init -> void
+Plume.Tools.ToolCall.Equals(Plume.Tools.ToolCall? other) -> bool
+Plume.Tools.ToolCall.Id.get -> string!
+Plume.Tools.ToolCall.Id.init -> void
+Plume.Tools.ToolCall.Name.get -> string!
+Plume.Tools.ToolCall.Name.init -> void
+Plume.Tools.ToolCall.ToolCall() -> void
+Plume.Tools.ToolChoice
+Plume.Tools.ToolChoice.Auto
+Plume.Tools.ToolChoice.Auto.Auto() -> void
+Plume.Tools.ToolChoice.Auto.Equals(Plume.Tools.ToolChoice.Auto? other) -> bool
+Plume.Tools.ToolChoice.None
+Plume.Tools.ToolChoice.None.Equals(Plume.Tools.ToolChoice.None? other) -> bool
+Plume.Tools.ToolChoice.None.None() -> void
+Plume.Tools.ToolChoice.Required
+Plume.Tools.ToolChoice.Required.Equals(Plume.Tools.ToolChoice.Required? other) -> bool
+Plume.Tools.ToolChoice.Required.Required() -> void
+Plume.Tools.ToolChoice.Specific
+Plume.Tools.ToolChoice.Specific.Deconstruct(out string! Name) -> void
+Plume.Tools.ToolChoice.Specific.Equals(Plume.Tools.ToolChoice.Specific? other) -> bool
+Plume.Tools.ToolChoice.Specific.Name.get -> string!
+Plume.Tools.ToolChoice.Specific.Name.init -> void
+Plume.Tools.ToolChoice.Specific.Specific(string! Name) -> void
+Plume.Tools.ToolChoice.ToolChoice(Plume.Tools.ToolChoice! original) -> void
+abstract Plume.Tools.ToolChoice.<Clone>$() -> Plume.Tools.ToolChoice!
+override Plume.Abstractions.EmbeddingRequest.Equals(object? obj) -> bool
+override Plume.Abstractions.EmbeddingRequest.GetHashCode() -> int
+override Plume.Abstractions.EmbeddingRequest.ToString() -> string!
+override Plume.Abstractions.EmbeddingResponse.Equals(object? obj) -> bool
+override Plume.Abstractions.EmbeddingResponse.GetHashCode() -> int
+override Plume.Abstractions.EmbeddingResponse.ToString() -> string!
+override Plume.Abstractions.ProviderRequest.Equals(object? obj) -> bool
+override Plume.Abstractions.ProviderRequest.GetHashCode() -> int
+override Plume.Abstractions.ProviderRequest.ToString() -> string!
+override Plume.Abstractions.ProviderResponse.Equals(object? obj) -> bool
+override Plume.Abstractions.ProviderResponse.GetHashCode() -> int
+override Plume.Abstractions.ProviderResponse.ToString() -> string!
+override Plume.Abstractions.ProviderStreamChunk.Equals(object? obj) -> bool
+override Plume.Abstractions.ProviderStreamChunk.GetHashCode() -> int
+override Plume.Abstractions.ProviderStreamChunk.ToString() -> string!
+override Plume.Abstractions.ResponseSchemaSpec.Equals(object? obj) -> bool
+override Plume.Abstractions.ResponseSchemaSpec.GetHashCode() -> int
+override Plume.Abstractions.ResponseSchemaSpec.ToString() -> string!
+override Plume.Abstractions.SseEvent.GetHashCode() -> int
+override Plume.Abstractions.TokenUsage.Equals(object? obj) -> bool
+override Plume.Abstractions.TokenUsage.GetHashCode() -> int
+override Plume.Abstractions.TokenUsage.ToString() -> string!
+override Plume.AskOptions.Equals(object? obj) -> bool
+override Plume.AskOptions.GetHashCode() -> int
+override Plume.AskOptions.ToString() -> string!
+override Plume.EmbedOptions.Equals(object? obj) -> bool
+override Plume.EmbedOptions.GetHashCode() -> int
+override Plume.EmbedOptions.ToString() -> string!
+override Plume.Embedding.Equals(object? obj) -> bool
+override Plume.Embedding.GetHashCode() -> int
+override Plume.Embedding.ToString() -> string!
+override Plume.Message.Equals(object? obj) -> bool
+override Plume.Message.GetHashCode() -> int
+override Plume.Message.ToString() -> string!
+override Plume.PlumeRequest.Equals(object? obj) -> bool
+override Plume.PlumeRequest.GetHashCode() -> int
+override Plume.PlumeRequest.ToString() -> string!
+override Plume.PlumeResponse.Equals(object? obj) -> bool
+override Plume.PlumeResponse.GetHashCode() -> int
+override Plume.PlumeResponse.ToString() -> string!
+override Plume.Tools.Tool.Equals(object? obj) -> bool
+override Plume.Tools.Tool.GetHashCode() -> int
+override Plume.Tools.Tool.ToString() -> string!
+override Plume.Tools.ToolCall.Equals(object? obj) -> bool
+override Plume.Tools.ToolCall.GetHashCode() -> int
+override Plume.Tools.ToolCall.ToString() -> string!
+override Plume.Tools.ToolChoice.Auto.<Clone>$() -> Plume.Tools.ToolChoice.Auto!
+override Plume.Tools.ToolChoice.Auto.Equals(object? obj) -> bool
+override Plume.Tools.ToolChoice.Auto.GetHashCode() -> int
+override Plume.Tools.ToolChoice.Auto.ToString() -> string!
+override Plume.Tools.ToolChoice.Equals(object? obj) -> bool
+override Plume.Tools.ToolChoice.GetHashCode() -> int
+override Plume.Tools.ToolChoice.None.<Clone>$() -> Plume.Tools.ToolChoice.None!
+override Plume.Tools.ToolChoice.None.Equals(object? obj) -> bool
+override Plume.Tools.ToolChoice.None.GetHashCode() -> int
+override Plume.Tools.ToolChoice.None.ToString() -> string!
+override Plume.Tools.ToolChoice.Required.<Clone>$() -> Plume.Tools.ToolChoice.Required!
+override Plume.Tools.ToolChoice.Required.Equals(object? obj) -> bool
+override Plume.Tools.ToolChoice.Required.GetHashCode() -> int
+override Plume.Tools.ToolChoice.Required.ToString() -> string!
+override Plume.Tools.ToolChoice.Specific.<Clone>$() -> Plume.Tools.ToolChoice.Specific!
+override Plume.Tools.ToolChoice.Specific.Equals(object? obj) -> bool
+override Plume.Tools.ToolChoice.Specific.GetHashCode() -> int
+override Plume.Tools.ToolChoice.Specific.ToString() -> string!
+override Plume.Tools.ToolChoice.ToString() -> string!
+override sealed Plume.Tools.ToolChoice.Auto.Equals(Plume.Tools.ToolChoice? other) -> bool
+override sealed Plume.Tools.ToolChoice.None.Equals(Plume.Tools.ToolChoice? other) -> bool
+override sealed Plume.Tools.ToolChoice.Required.Equals(Plume.Tools.ToolChoice? other) -> bool
+override sealed Plume.Tools.ToolChoice.Specific.Equals(Plume.Tools.ToolChoice? other) -> bool
+static Plume.Abstractions.EmbeddingRequest.operator !=(Plume.Abstractions.EmbeddingRequest? left, Plume.Abstractions.EmbeddingRequest? right) -> bool
+static Plume.Abstractions.EmbeddingRequest.operator ==(Plume.Abstractions.EmbeddingRequest? left, Plume.Abstractions.EmbeddingRequest? right) -> bool
+static Plume.Abstractions.EmbeddingResponse.operator !=(Plume.Abstractions.EmbeddingResponse? left, Plume.Abstractions.EmbeddingResponse? right) -> bool
+static Plume.Abstractions.EmbeddingResponse.operator ==(Plume.Abstractions.EmbeddingResponse? left, Plume.Abstractions.EmbeddingResponse? right) -> bool
+static Plume.Abstractions.HttpProviderHelpers.ThrowForNonSuccessAsync(string! providerName, System.Net.Http.HttpResponseMessage! response, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task!
+static Plume.Abstractions.ProviderRequest.operator !=(Plume.Abstractions.ProviderRequest? left, Plume.Abstractions.ProviderRequest? right) -> bool
+static Plume.Abstractions.ProviderRequest.operator ==(Plume.Abstractions.ProviderRequest? left, Plume.Abstractions.ProviderRequest? right) -> bool
+static Plume.Abstractions.ProviderResponse.operator !=(Plume.Abstractions.ProviderResponse? left, Plume.Abstractions.ProviderResponse? right) -> bool
+static Plume.Abstractions.ProviderResponse.operator ==(Plume.Abstractions.ProviderResponse? left, Plume.Abstractions.ProviderResponse? right) -> bool
+static Plume.Abstractions.ProviderStreamChunk.operator !=(Plume.Abstractions.ProviderStreamChunk? left, Plume.Abstractions.ProviderStreamChunk? right) -> bool
+static Plume.Abstractions.ProviderStreamChunk.operator ==(Plume.Abstractions.ProviderStreamChunk? left, Plume.Abstractions.ProviderStreamChunk? right) -> bool
+static Plume.Abstractions.ResponseSchemaSpec.operator !=(Plume.Abstractions.ResponseSchemaSpec? left, Plume.Abstractions.ResponseSchemaSpec? right) -> bool
+static Plume.Abstractions.ResponseSchemaSpec.operator ==(Plume.Abstractions.ResponseSchemaSpec? left, Plume.Abstractions.ResponseSchemaSpec? right) -> bool
+static Plume.Abstractions.SseEvent.operator !=(Plume.Abstractions.SseEvent left, Plume.Abstractions.SseEvent right) -> bool
+static Plume.Abstractions.SseEvent.operator ==(Plume.Abstractions.SseEvent left, Plume.Abstractions.SseEvent right) -> bool
+static Plume.Abstractions.SseEventReader.ReadAsync(System.IO.Stream! stream, System.Threading.CancellationToken ct) -> System.Collections.Generic.IAsyncEnumerable<Plume.Abstractions.SseEvent>!
+static Plume.Abstractions.TokenUsage.operator !=(Plume.Abstractions.TokenUsage? left, Plume.Abstractions.TokenUsage? right) -> bool
+static Plume.Abstractions.TokenUsage.operator ==(Plume.Abstractions.TokenUsage? left, Plume.Abstractions.TokenUsage? right) -> bool
+static Plume.AskOptions.operator !=(Plume.AskOptions? left, Plume.AskOptions? right) -> bool
+static Plume.AskOptions.operator ==(Plume.AskOptions? left, Plume.AskOptions? right) -> bool
+static Plume.DependencyInjection.EmbeddingsServiceCollectionExtensions.AddPlumeEmbeddings(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<Plume.PlumeEmbeddingOptions!>! configure) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Plume.DependencyInjection.ServiceCollectionExtensions.AddPlume(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<Plume.PlumeOptions!>! configure) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static Plume.EmbedOptions.operator !=(Plume.EmbedOptions? left, Plume.EmbedOptions? right) -> bool
+static Plume.EmbedOptions.operator ==(Plume.EmbedOptions? left, Plume.EmbedOptions? right) -> bool
+static Plume.Embedding.CosineSimilarity(System.ReadOnlySpan<float> a, System.ReadOnlySpan<float> b) -> float
+static Plume.Embedding.operator !=(Plume.Embedding? left, Plume.Embedding? right) -> bool
+static Plume.Embedding.operator ==(Plume.Embedding? left, Plume.Embedding? right) -> bool
+static Plume.EmbeddingClient.CreateBuilder() -> Plume.EmbeddingClientBuilder!
+static Plume.EmbeddingClientExtensions.EmbedAsync(this Plume.IEmbeddingClient! client, string! input, Plume.EmbedOptions? options = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<Plume.Embedding!>!
+static Plume.Message.operator !=(Plume.Message? left, Plume.Message? right) -> bool
+static Plume.Message.operator ==(Plume.Message? left, Plume.Message? right) -> bool
+static Plume.PlumeClient.CreateBuilder() -> Plume.PlumeClientBuilder!
+static Plume.PlumeRequest.operator !=(Plume.PlumeRequest? left, Plume.PlumeRequest? right) -> bool
+static Plume.PlumeRequest.operator ==(Plume.PlumeRequest? left, Plume.PlumeRequest? right) -> bool
+static Plume.PlumeResponse.operator !=(Plume.PlumeResponse? left, Plume.PlumeResponse? right) -> bool
+static Plume.PlumeResponse.operator ==(Plume.PlumeResponse? left, Plume.PlumeResponse? right) -> bool
+static Plume.StructuredOutput.JsonSchemaGenerator.TryGenerate(System.Text.Json.Serialization.Metadata.JsonTypeInfo! typeInfo) -> string?
+static Plume.StructuredOutput.JsonSchemaGenerator.TryGenerate<T>(System.Text.Json.JsonSerializerOptions! options) -> string?
+static Plume.StructuredOutput.PlumeClientStructuredExtensions.AskAsync<T>(this Plume.IPlumeClient! client, string! prompt, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T>! jsonTypeInfo, Plume.AskOptions? options = null, System.Threading.CancellationToken ct = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<T>!
+static Plume.Tools.Tool.operator !=(Plume.Tools.Tool? left, Plume.Tools.Tool? right) -> bool
+static Plume.Tools.Tool.operator ==(Plume.Tools.Tool? left, Plume.Tools.Tool? right) -> bool
+static Plume.Tools.ToolBinder.Bind<TArgs, TResult>(string! name, string! description, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TArgs>! argsTypeInfo, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TResult>! resultTypeInfo, System.Func<TArgs, System.Threading.CancellationToken, System.Threading.Tasks.Task<TResult>!>! handler) -> Plume.Tools.BoundTool!
+static Plume.Tools.ToolBinder.Bind<TArgs, TResult>(string! name, string! description, string! parametersJsonSchema, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TArgs>! argsTypeInfo, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TResult>! resultTypeInfo, System.Func<TArgs, System.Threading.CancellationToken, System.Threading.Tasks.Task<TResult>!>! handler) -> Plume.Tools.BoundTool!
+static Plume.Tools.ToolBinder.Bind<TArgs>(string! name, string! description, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TArgs>! argsTypeInfo, System.Func<TArgs, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! handler) -> Plume.Tools.BoundTool!
+static Plume.Tools.ToolBinder.Bind<TArgs>(string! name, string! description, string! parametersJsonSchema, System.Text.Json.Serialization.Metadata.JsonTypeInfo<TArgs>! argsTypeInfo, System.Func<TArgs, System.Threading.CancellationToken, System.Threading.Tasks.Task<string!>!>! handler) -> Plume.Tools.BoundTool!
+static Plume.Tools.ToolCall.operator !=(Plume.Tools.ToolCall? left, Plume.Tools.ToolCall? right) -> bool
+static Plume.Tools.ToolCall.operator ==(Plume.Tools.ToolCall? left, Plume.Tools.ToolCall? right) -> bool
+static Plume.Tools.ToolChoice.Auto.operator !=(Plume.Tools.ToolChoice.Auto? left, Plume.Tools.ToolChoice.Auto? right) -> bool
+static Plume.Tools.ToolChoice.Auto.operator ==(Plume.Tools.ToolChoice.Auto? left, Plume.Tools.ToolChoice.Auto? right) -> bool
+static Plume.Tools.ToolChoice.None.operator !=(Plume.Tools.ToolChoice.None? left, Plume.Tools.ToolChoice.None? right) -> bool
+static Plume.Tools.ToolChoice.None.operator ==(Plume.Tools.ToolChoice.None? left, Plume.Tools.ToolChoice.None? right) -> bool
+static Plume.Tools.ToolChoice.Required.operator !=(Plume.Tools.ToolChoice.Required? left, Plume.Tools.ToolChoice.Required? right) -> bool
+static Plume.Tools.ToolChoice.Required.operator ==(Plume.Tools.ToolChoice.Required? left, Plume.Tools.ToolChoice.Required? right) -> bool
+static Plume.Tools.ToolChoice.Specific.operator !=(Plume.Tools.ToolChoice.Specific? left, Plume.Tools.ToolChoice.Specific? right) -> bool
+static Plume.Tools.ToolChoice.Specific.operator ==(Plume.Tools.ToolChoice.Specific? left, Plume.Tools.ToolChoice.Specific? right) -> bool
+static Plume.Tools.ToolChoice.operator !=(Plume.Tools.ToolChoice? left, Plume.Tools.ToolChoice? right) -> bool
+static Plume.Tools.ToolChoice.operator ==(Plume.Tools.ToolChoice? left, Plume.Tools.ToolChoice? right) -> bool
+virtual Plume.Tools.ToolChoice.EqualityContract.get -> System.Type!
+virtual Plume.Tools.ToolChoice.Equals(Plume.Tools.ToolChoice? other) -> bool
+virtual Plume.Tools.ToolChoice.PrintMembers(System.Text.StringBuilder! builder) -> bool
+~override Plume.Abstractions.SseEvent.Equals(object obj) -> bool
+~override Plume.Abstractions.SseEvent.ToString() -> string

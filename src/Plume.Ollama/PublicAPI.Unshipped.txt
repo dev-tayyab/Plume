@@ -1,0 +1,44 @@
+#nullable enable
+Plume.Ollama.OllamaEmbeddingProvider
+Plume.Ollama.OllamaEmbeddingProvider.EmbedAsync(Plume.Abstractions.EmbeddingRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.EmbeddingResponse!>!
+Plume.Ollama.OllamaEmbeddingProvider.Name.get -> string!
+Plume.Ollama.OllamaEmbeddingProvider.OllamaEmbeddingProvider(System.Net.Http.HttpClient! http, Plume.Ollama.OllamaProviderOptions! options) -> void
+Plume.Ollama.OllamaEmbeddingProvider.Supports(string! model) -> bool
+Plume.Ollama.OllamaExtensions
+Plume.Ollama.OllamaExtensions.<Clone>$() -> Plume.Ollama.OllamaExtensions!
+Plume.Ollama.OllamaExtensions.Equals(Plume.Ollama.OllamaExtensions? other) -> bool
+Plume.Ollama.OllamaExtensions.KeepAlive.get -> string?
+Plume.Ollama.OllamaExtensions.KeepAlive.init -> void
+Plume.Ollama.OllamaExtensions.OllamaExtensions() -> void
+Plume.Ollama.OllamaExtensions.Seed.get -> int?
+Plume.Ollama.OllamaExtensions.Seed.init -> void
+Plume.Ollama.OllamaExtensions.TopK.get -> int?
+Plume.Ollama.OllamaExtensions.TopK.init -> void
+Plume.Ollama.OllamaExtensions.TopP.get -> double?
+Plume.Ollama.OllamaExtensions.TopP.init -> void
+Plume.Ollama.OllamaProvider
+Plume.Ollama.OllamaProvider.Name.get -> string!
+Plume.Ollama.OllamaProvider.OllamaProvider(System.Net.Http.HttpClient! http, Plume.Ollama.OllamaProviderOptions! options) -> void
+Plume.Ollama.OllamaProvider.SendAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.ProviderResponse!>!
+Plume.Ollama.OllamaProvider.StreamAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Collections.Generic.IAsyncEnumerable<Plume.Abstractions.ProviderStreamChunk!>!
+Plume.Ollama.OllamaProvider.Supports(string! model) -> bool
+Plume.Ollama.OllamaProviderOptions
+Plume.Ollama.OllamaProviderOptions.BaseUrl.get -> string!
+Plume.Ollama.OllamaProviderOptions.BaseUrl.init -> void
+Plume.Ollama.OllamaProviderOptions.OllamaProviderOptions() -> void
+Plume.Ollama.OllamaProviderOptions.RequiredModelPrefix.get -> string?
+Plume.Ollama.OllamaProviderOptions.RequiredModelPrefix.init -> void
+Plume.Ollama.PlumeOllamaEmbeddingsExtensions
+Plume.Ollama.PlumeOllamaEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!)
+Plume.Ollama.PlumeOllamaEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).FallbackToOllama(string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeEmbeddingOptions!
+Plume.Ollama.PlumeOllamaEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).UseOllama(string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeEmbeddingOptions!
+Plume.Ollama.PlumeOllamaExtensions
+override Plume.Ollama.OllamaExtensions.Equals(object? obj) -> bool
+override Plume.Ollama.OllamaExtensions.GetHashCode() -> int
+override Plume.Ollama.OllamaExtensions.ToString() -> string!
+static Plume.Ollama.OllamaExtensions.operator !=(Plume.Ollama.OllamaExtensions? left, Plume.Ollama.OllamaExtensions? right) -> bool
+static Plume.Ollama.OllamaExtensions.operator ==(Plume.Ollama.OllamaExtensions? left, Plume.Ollama.OllamaExtensions? right) -> bool
+static Plume.Ollama.PlumeOllamaEmbeddingsExtensions.FallbackToOllama(this Plume.PlumeEmbeddingOptions! options, string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeEmbeddingOptions!
+static Plume.Ollama.PlumeOllamaEmbeddingsExtensions.UseOllama(this Plume.PlumeEmbeddingOptions! options, string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeEmbeddingOptions!
+static Plume.Ollama.PlumeOllamaExtensions.FallbackToOllama(this Plume.PlumeOptions! options, string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeOptions!
+static Plume.Ollama.PlumeOllamaExtensions.UseOllama(this Plume.PlumeOptions! options, string? baseUrl = null, string? requiredModelPrefix = null) -> Plume.PlumeOptions!

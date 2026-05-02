@@ -3,9 +3,19 @@
 **The minimalist, resilient AI client for .NET.**
 One unified API. Multiple providers. Built-in failover.
 
-[![NuGet](https://img.shields.io/nuget/v/Plume.svg)](https://www.nuget.org/packages/Plume)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![CI](https://github.com/dev-tayyab/Plume/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-tayyab/Plume/actions)
+[![NuGet](https://img.shields.io/nuget/v/Plume.svg?label=Plume)](https://www.nuget.org/packages/Plume)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Plume.svg)](https://www.nuget.org/packages/Plume)
+[![CI](https://github.com/dev-tayyab/Plume/actions/workflows/ci.yml/badge.svg)](https://github.com/dev-tayyab/Plume/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-8.0%20%7C%209.0%20%7C%2010.0-512BD4)](https://dotnet.microsoft.com/)
+
+| Package | Version |
+| --- | --- |
+| [Plume](https://www.nuget.org/packages/Plume) | [![NuGet](https://img.shields.io/nuget/v/Plume.svg)](https://www.nuget.org/packages/Plume) |
+| [Plume.OpenAI](https://www.nuget.org/packages/Plume.OpenAI) | [![NuGet](https://img.shields.io/nuget/v/Plume.OpenAI.svg)](https://www.nuget.org/packages/Plume.OpenAI) |
+| [Plume.Anthropic](https://www.nuget.org/packages/Plume.Anthropic) | [![NuGet](https://img.shields.io/nuget/v/Plume.Anthropic.svg)](https://www.nuget.org/packages/Plume.Anthropic) |
+| [Plume.Google](https://www.nuget.org/packages/Plume.Google) | [![NuGet](https://img.shields.io/nuget/v/Plume.Google.svg)](https://www.nuget.org/packages/Plume.Google) |
+| [Plume.Ollama](https://www.nuget.org/packages/Plume.Ollama) | [![NuGet](https://img.shields.io/nuget/v/Plume.Ollama.svg)](https://www.nuget.org/packages/Plume.Ollama) |
 
 ```csharp
 using var http = new HttpClient();

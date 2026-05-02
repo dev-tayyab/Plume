@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Plume.Abstractions;
+using Plume.Tools;
 
 namespace Plume.Tests;
 
@@ -32,6 +33,28 @@ internal sealed class FakeProvider(string name, Func<string, bool>? supports = n
 
     public void QueueException(Exception ex) => _responseFactories.Enqueue(() => throw ex);
 
+    public void QueueToolCall(string toolName, string argsJson, string? id = null)
+    {
+        _responseFactories.Enqueue(() => new ProviderResponse
+        {
+            Content = string.Empty,
+            Model = "test-model",
+            FinishReason = FinishReason.ToolCalls,
+            ToolCalls = new[]
+            {
+                new ToolCall
+                {
+                    Id = id ?? $"call-{Guid.NewGuid():N}",
+                    Name = toolName,
+                    ArgumentsJson = argsJson
+                }
+            }
+        });
+    }
+
+    /// <summary>The last request the provider received (useful for asserting Tools/ToolChoice).</summary>
+    public ProviderRequest? LastRequest { get; private set; }
+
     public void QueueStream(params string[] chunks)
     {
         var captured = chunks.ToArray();
@@ -46,6 +69,7 @@ internal sealed class FakeProvider(string name, Func<string, bool>? supports = n
     public Task<ProviderResponse> SendAsync(ProviderRequest request, CancellationToken ct)
     {
         CallCount++;
+        LastRequest = request;
         if (_responseFactories.Count == 0)
             throw new InvalidOperationException($"FakeProvider '{Name}' has no queued response.");
         return Task.FromResult(_responseFactories.Dequeue()());

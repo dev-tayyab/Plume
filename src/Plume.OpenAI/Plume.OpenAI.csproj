@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <PackageId>Plume.OpenAI</PackageId>
-    <Description>OpenAI provider for Plume — works with OpenAI, Azure OpenAI, OpenRouter, and any OpenAI-compatible endpoint.</Description>
+    <Description>OpenAI provider for Plume — works with OpenAI, Azure OpenAI, OpenRouter, and any OpenAI-compatible Chat Completions endpoint.</Description>
+    <PackageTags>plume;ai;llm;openai;azure-openai;openrouter;gpt;chatgpt;chat-completions;streaming</PackageTags>
     <RootNamespace>Plume.OpenAI</RootNamespace>
     <AssemblyName>Plume.OpenAI</AssemblyName>
     <IsAotCompatible>true</IsAotCompatible>

@@ -1,0 +1,44 @@
+#nullable enable
+Plume.Google.GoogleEmbeddingProvider
+Plume.Google.GoogleEmbeddingProvider.EmbedAsync(Plume.Abstractions.EmbeddingRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.EmbeddingResponse!>!
+Plume.Google.GoogleEmbeddingProvider.GoogleEmbeddingProvider(System.Net.Http.HttpClient! http, Plume.Google.GoogleProviderOptions! options) -> void
+Plume.Google.GoogleEmbeddingProvider.Name.get -> string!
+Plume.Google.GoogleEmbeddingProvider.Supports(string! model) -> bool
+Plume.Google.GoogleExtensions
+Plume.Google.GoogleExtensions.<Clone>$() -> Plume.Google.GoogleExtensions!
+Plume.Google.GoogleExtensions.CandidateCount.get -> int?
+Plume.Google.GoogleExtensions.CandidateCount.init -> void
+Plume.Google.GoogleExtensions.Equals(Plume.Google.GoogleExtensions? other) -> bool
+Plume.Google.GoogleExtensions.GoogleExtensions() -> void
+Plume.Google.GoogleExtensions.TopK.get -> int?
+Plume.Google.GoogleExtensions.TopK.init -> void
+Plume.Google.GoogleExtensions.TopP.get -> double?
+Plume.Google.GoogleExtensions.TopP.init -> void
+Plume.Google.GoogleProvider
+Plume.Google.GoogleProvider.GoogleProvider(System.Net.Http.HttpClient! http, Plume.Google.GoogleProviderOptions! options) -> void
+Plume.Google.GoogleProvider.Name.get -> string!
+Plume.Google.GoogleProvider.SendAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Threading.Tasks.Task<Plume.Abstractions.ProviderResponse!>!
+Plume.Google.GoogleProvider.StreamAsync(Plume.Abstractions.ProviderRequest! request, System.Threading.CancellationToken ct) -> System.Collections.Generic.IAsyncEnumerable<Plume.Abstractions.ProviderStreamChunk!>!
+Plume.Google.GoogleProvider.Supports(string! model) -> bool
+Plume.Google.GoogleProviderOptions
+Plume.Google.GoogleProviderOptions.ApiKey.get -> string!
+Plume.Google.GoogleProviderOptions.ApiKey.init -> void
+Plume.Google.GoogleProviderOptions.ApiVersion.get -> string!
+Plume.Google.GoogleProviderOptions.ApiVersion.init -> void
+Plume.Google.GoogleProviderOptions.BaseUrl.get -> string!
+Plume.Google.GoogleProviderOptions.BaseUrl.init -> void
+Plume.Google.GoogleProviderOptions.GoogleProviderOptions() -> void
+Plume.Google.PlumeGoogleEmbeddingsExtensions
+Plume.Google.PlumeGoogleEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!)
+Plume.Google.PlumeGoogleEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).FallbackToGoogle(string! apiKey, string? baseUrl = null) -> Plume.PlumeEmbeddingOptions!
+Plume.Google.PlumeGoogleEmbeddingsExtensions.extension(Plume.PlumeEmbeddingOptions!).UseGoogle(string! apiKey, string? baseUrl = null) -> Plume.PlumeEmbeddingOptions!
+Plume.Google.PlumeGoogleExtensions
+override Plume.Google.GoogleExtensions.Equals(object? obj) -> bool
+override Plume.Google.GoogleExtensions.GetHashCode() -> int
+override Plume.Google.GoogleExtensions.ToString() -> string!
+static Plume.Google.GoogleExtensions.operator !=(Plume.Google.GoogleExtensions? left, Plume.Google.GoogleExtensions? right) -> bool
+static Plume.Google.GoogleExtensions.operator ==(Plume.Google.GoogleExtensions? left, Plume.Google.GoogleExtensions? right) -> bool
+static Plume.Google.PlumeGoogleEmbeddingsExtensions.FallbackToGoogle(this Plume.PlumeEmbeddingOptions! options, string! apiKey, string? baseUrl = null) -> Plume.PlumeEmbeddingOptions!
+static Plume.Google.PlumeGoogleEmbeddingsExtensions.UseGoogle(this Plume.PlumeEmbeddingOptions! options, string! apiKey, string? baseUrl = null) -> Plume.PlumeEmbeddingOptions!
+static Plume.Google.PlumeGoogleExtensions.FallbackToGoogle(this Plume.PlumeOptions! options, string! apiKey, string? baseUrl = null, string? apiVersion = null) -> Plume.PlumeOptions!
+static Plume.Google.PlumeGoogleExtensions.UseGoogle(this Plume.PlumeOptions! options, string! apiKey, string? baseUrl = null, string? apiVersion = null) -> Plume.PlumeOptions!

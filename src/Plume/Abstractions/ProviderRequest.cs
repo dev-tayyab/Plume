@@ -1,3 +1,5 @@
+using Plume.Tools;
+
 namespace Plume.Abstractions;
 
 /// <summary>
@@ -20,6 +22,18 @@ public sealed record ProviderRequest
 
     /// <summary>Stop sequences.</summary>
     public IReadOnlyList<string>? StopSequences { get; init; }
+
+    /// <summary>
+    /// Provider-agnostic structured output spec. When set, the provider will
+    /// constrain the model to produce JSON (with optional schema enforcement).
+    /// </summary>
+    public ResponseSchemaSpec? ResponseSchema { get; init; }
+
+    /// <summary>Tools the model is permitted to call. Null disables tool use.</summary>
+    public IReadOnlyList<Tool>? Tools { get; init; }
+
+    /// <summary>How aggressively the model should use tools. Defaults to <see cref="ToolChoice.Auto"/> when <see cref="Tools"/> is set.</summary>
+    public ToolChoice? ToolChoice { get; init; }
 
     /// <summary>
     /// Provider-specific extensions. Each provider casts to its own type

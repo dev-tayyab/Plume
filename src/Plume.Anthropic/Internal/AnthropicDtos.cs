@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Plume.Anthropic.Internal;
@@ -40,6 +41,28 @@ internal sealed class AnthropicMessagesRequest
     [JsonPropertyName("metadata")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public AnthropicMetadata? Metadata { get; set; }
+
+    [JsonPropertyName("tools")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<AnthropicToolDef>? Tools { get; set; }
+
+    /// <summary>{ type: "auto" | "any" | "tool", name?, disable_parallel_tool_use? }</summary>
+    [JsonPropertyName("tool_choice")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public JsonElement? ToolChoice { get; set; }
+}
+
+internal sealed class AnthropicToolDef
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = "";
+
+    [JsonPropertyName("description")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("input_schema")]
+    public JsonElement InputSchema { get; set; }
 }
 
 internal sealed class AnthropicMetadata
@@ -53,8 +76,9 @@ internal sealed class AnthropicMessage
     [JsonPropertyName("role")]
     public string Role { get; set; } = "";
 
+    /// <summary>String (shorthand) or array of content blocks for tool_use / tool_result.</summary>
     [JsonPropertyName("content")]
-    public string Content { get; set; } = "";
+    public JsonElement Content { get; set; }
 }
 
 internal sealed class AnthropicMessageResponse
@@ -88,6 +112,15 @@ internal sealed class AnthropicContentBlock
 
     [JsonPropertyName("text")]
     public string? Text { get; set; }
+
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    [JsonPropertyName("input")]
+    public JsonElement? Input { get; set; }
 }
 
 internal sealed class AnthropicUsage
